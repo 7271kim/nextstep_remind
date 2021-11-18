@@ -1,2 +1,2 @@
 # nextstep_remind
-## Lotto
+## 1. Lotto 과제
