@@ -17,6 +17,8 @@ repositories {
 dependencies {
     testCompileOnly 'org.junit.jupiter:junit-jupiter:5.6.0'
     testCompileOnly 'org.assertj:assertj-core:3.15.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-commons:1.7.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.0'
 }
 
 test {
