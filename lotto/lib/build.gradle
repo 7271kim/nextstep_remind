@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+}
+
+version = '1.0.0'
+
+compileJava {
+    options.release = 11
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompileOnly 'org.junit.jupiter:junit-jupiter:5.6.0'
+    testCompileOnly 'org.assertj:assertj-core:3.15.0'
+}
+
+test {
+    useJUnitPlatform()
+}
