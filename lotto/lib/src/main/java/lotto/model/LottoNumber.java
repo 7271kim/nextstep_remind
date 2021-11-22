@@ -1,6 +1,8 @@
 package lotto.model;
 
-public class LottoNumber {
+import java.util.Objects;
+
+public class LottoNumber implements Comparable<LottoNumber> {
 
     private static final int MIN_NUMBER = 1;
     private static final int MAX_NUMBER = 45;
@@ -14,13 +16,38 @@ public class LottoNumber {
     }
 
     private void checkRange(int number) {
-        if (number <= MIN_NUMBER || number >= MAX_NUMBER) {
+        if (number < MIN_NUMBER || number > MAX_NUMBER) {
             throw new IllegalArgumentException(CHECK_VALIDATION);
         }
     }
 
     public int getNumber() {
         return number;
+    }
+
+    @Override
+    public int compareTo(LottoNumber compare) {
+        return Integer.compare(this.number, compare.getNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        LottoNumber other = (LottoNumber)obj;
+        return number == other.number;
     }
 
 }
