@@ -30,4 +30,15 @@ public class LottoTicketTest {
         });
     }
 
+    @Test
+    @DisplayName("금액에 맞는 로또 번호 생성 확인")
+    void createWithLotto() {
+        List<Lotto> manual = Arrays.asList(Lotto.of("1,2,3,4,5,6"));
+        LottoTicket ticket = new LottoTicket(LottoPrice.of(3000));
+        LottoTicket ticketWithManual = new LottoTicket(LottoPrice.of(3000),
+            manual);
+        assertThat(ticket.getTicket().size()).isEqualTo(3);
+        assertThat(ticketWithManual.getTicket().size()).isEqualTo(3);
+    }
+
 }
