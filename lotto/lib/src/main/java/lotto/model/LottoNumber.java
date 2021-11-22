@@ -11,8 +11,13 @@ public class LottoNumber implements Comparable<LottoNumber> {
     private int number;
 
     public LottoNumber(int number) {
-        checkRange(number);
+        validate(number);
+
         this.number = number;
+    }
+
+    private void validate(int number) {
+        checkRange(number);
     }
 
     private void checkRange(int number) {

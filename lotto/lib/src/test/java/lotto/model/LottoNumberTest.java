@@ -12,7 +12,7 @@ public class LottoNumberTest {
     @ParameterizedTest
     @DisplayName("1-45이외의 숫자 입력 시,IllegalArgumentException을 발생시킨다.")
     @ValueSource(ints = {0, 46})
-    void validationTest(int input) {
+    void validateTest(int input) {
         assertThrows(IllegalArgumentException.class, () -> {
             new LottoNumber(input);
         });
