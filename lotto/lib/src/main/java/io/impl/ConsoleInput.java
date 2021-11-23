@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import io.Input;
 
-public class InputConsole implements Input {
+public class ConsoleInput implements Input {
 
     private Scanner scanner;
 
-    public InputConsole() {
+    public ConsoleInput() {
         this.scanner = new Scanner(System.in);
     }
 
@@ -16,5 +16,8 @@ public class InputConsole implements Input {
     public String accept() {
         return scanner.nextLine();
     }
+
+    @Override
+    public void close() {}
 
 }
