@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -74,6 +75,20 @@ public class LottoTicketTest {
         assertThat(winnerList.get(0)).isEqualTo(Rank.FIRST);
         assertThat(winnerList.get(1)).isEqualTo(rank);
 
+    }
+
+    @Test
+    @DisplayName("통계 추출 데이터 확인")
+    void allStaticTest() {
+        List<Lotto> manual = List.of(Lotto.of("1,2,3,4,5,6"), Lotto.of("1,2,3,4,5,6"), Lotto.of("1,2,3,4,5,7"), Lotto.of("2,3,4,5,6,9"));
+        Lotto winner = Lotto.of("1,2,3,4,5,6");
+        LottoNumber bonus = new LottoNumber(7);
+        LottoTicket ticket = new LottoTicketBuilder(LottoPrice.of(4000)).manual(manual).build();
+        Map<Rank, Long> allStatic = ticket.allStatic(winner, bonus);
+        assertThat(allStatic)
+            .containsEntry(Rank.FIRST, 2l)
+            .containsEntry(Rank.SECOND, 1l)
+            .containsEntry(Rank.THIRD, 1l);
     }
 
     private static Stream<Arguments> rankData() {
