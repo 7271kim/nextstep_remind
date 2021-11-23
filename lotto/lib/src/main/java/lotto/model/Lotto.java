@@ -39,7 +39,7 @@ public class Lotto {
     }
 
     public static Lotto of(String text) {
-        return Lotto.of(Arrays.asList(text.split(",")).stream()
+        return Lotto.of(List.of(text.split(",")).stream()
             .map(Integer::parseInt)
             .collect(Collectors.toList()));
     }
