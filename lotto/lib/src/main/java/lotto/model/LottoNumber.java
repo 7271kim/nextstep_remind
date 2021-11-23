@@ -1,6 +1,7 @@
 package lotto.model;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class LottoNumber implements Comparable<LottoNumber> {
 
@@ -10,10 +11,24 @@ public class LottoNumber implements Comparable<LottoNumber> {
 
     private int number;
 
-    public LottoNumber(int number) {
-        validate(number);
+    public LottoNumber(String number) {
+        chekNumber(number);
+        init(Integer.parseInt(number));
+    }
 
+    public LottoNumber(int number) {
+        init(number);
+    }
+
+    private void init(int number) {
+        validate(number);
         this.number = number;
+    }
+
+    private void chekNumber(String number) {
+        if (!Pattern.matches("^[0-9]+$", number)) {
+            throw new IllegalArgumentException(CHECK_VALIDATION);
+        }
     }
 
     private void validate(int number) {

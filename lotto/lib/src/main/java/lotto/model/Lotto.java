@@ -52,4 +52,10 @@ public class Lotto {
         return (int)list.stream().filter(winLotto::contains).count();
     }
 
+    public String text() {
+        return list.stream()
+            .map(number -> String.valueOf(number.getNumber()))
+            .collect(Collectors.joining(","));
+    }
+
 }
