@@ -5,15 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import lotto.constant.Rank;
 import lotto.util.GenerateLotto;
 
 public class LottoTicket {
 
     private static final String CHECK_MANUAL = "구매금액 이상으로 manual가격을 입력하셧습니다.";
     private List<Lotto> ticket = Collections.emptyList();
-    private List<Lotto> manual = Collections.emptyList();
-    private Set<Integer> excludedNumber = Collections.emptySet();
-    private LottoPrice price;
 
     private LottoTicket(LottoTicketBuilder builder) {
         validate(builder.price, builder.manual);
@@ -43,6 +41,17 @@ public class LottoTicket {
 
     public List<Lotto> getTicket() {
         return Collections.unmodifiableList(ticket);
+    }
+
+    public List<Rank> getWinner(Lotto winLotto, LottoNumber bonus) {
+        List<Rank> result = new ArrayList<>();
+        for (Lotto lotto : ticket) {
+            int matchedCount = lotto.matchedCount(winLotto);
+            boolean hasBonus = lotto.contains(bonus);
+            result.add(Rank.valueOf(matchedCount, hasBonus));
+        }
+        Collections.sort(result, (one, two) -> Integer.compare(two.winnerPrice(), one.winnerPrice()));
+        return result;
     }
 
     public static class LottoTicketBuilder {

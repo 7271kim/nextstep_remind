@@ -5,10 +5,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import lotto.constant.Rank;
 import lotto.model.LottoTicket.LottoTicketBuilder;
 
 public class LottoTicketTest {
@@ -53,6 +58,33 @@ public class LottoTicketTest {
             .build();
         List<Lotto> lottos = ticket.getTicket();
         assertThat(lottos.size()).isEqualTo(3);
+    }
+
+    @ParameterizedTest
+    @DisplayName("당첨 번호를 받고 Rank 확인")
+    @MethodSource("rankData")
+    void rankTest(Lotto lotto, Rank rank) {
+        Lotto winLotto = Lotto.of("1, 2, 3, 4, 5, 6");
+        LottoNumber bonus = new LottoNumber(7);
+        List<Lotto> manual = List.of(lotto, Lotto.of("1, 2, 3, 4, 5, 6"));
+        LottoTicket ticket = new LottoTicketBuilder(LottoPrice.of(2000))
+            .manual(manual)
+            .build();
+        List<Rank> winnerList = ticket.getWinner(winLotto, bonus);
+        assertThat(winnerList.get(0)).isEqualTo(Rank.FIRST);
+        assertThat(winnerList.get(1)).isEqualTo(rank);
+
+    }
+
+    private static Stream<Arguments> rankData() {
+        return Stream.of(
+            Arguments.of(Lotto.of("1, 2, 3, 4, 5, 6"), Rank.FIRST),
+            Arguments.of(Lotto.of("1, 2, 3, 4, 5, 7"), Rank.SECOND),
+            Arguments.of(Lotto.of("2, 3, 4, 5, 6, 9"), Rank.THIRD),
+            Arguments.of(Lotto.of("3, 4, 5, 6, 7, 8"), Rank.FOURTH),
+            Arguments.of(Lotto.of("4, 5, 6, 7, 8, 9"), Rank.FIFTH),
+            Arguments.of(Lotto.of("4, 5, 6, 7, 8, 9"), Rank.FIFTH),
+            Arguments.of(Lotto.of("11, 12, 13, 14, 15, 16"), Rank.NONE));
     }
 
 }

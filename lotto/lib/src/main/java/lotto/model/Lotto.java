@@ -1,6 +1,5 @@
 package lotto.model;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -39,9 +38,18 @@ public class Lotto {
     }
 
     public static Lotto of(String text) {
+        text = text.replace(" ", "");
         return Lotto.of(List.of(text.split(",")).stream()
             .map(Integer::parseInt)
             .collect(Collectors.toList()));
+    }
+
+    public boolean contains(LottoNumber lottoNumber) {
+        return list.contains(lottoNumber);
+    }
+
+    public int matchedCount(Lotto winLotto) {
+        return (int)list.stream().filter(winLotto::contains).count();
     }
 
 }
