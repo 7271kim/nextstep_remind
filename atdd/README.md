@@ -1,12 +1,4 @@
-<p align="center">
-  <img alt="npm" src="https://img.shields.io/badge/npm-%3E%3D%205.5.0-blue">
-  <img alt="node" src="https://img.shields.io/badge/node-%3E%3D%209.3.0-blue">
-  <img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fedu.nextstep.camp%2Fc%2FR89PYi5H">
-  <img alt="GitHub" src="https://img.shields.io/github/license/next-step/atdd-subway-admin">
-</p>
-<br>
-
-# 지하철 노선 관리
+# 지하철 노선 관리 <img alt="npm" src="https://img.shields.io/badge/npm-%3E%3D%205.5.0-blue"><img alt="node" src="https://img.shields.io/badge/node-%3E%3D%209.3.0-blue"><img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fedu.nextstep.camp%2Fc%2FR89PYi5H"><img alt="GitHub" src="https://img.shields.io/github/license/next-step/atdd-subway-admin">
 
 ## 🚀 Getting Started
 
