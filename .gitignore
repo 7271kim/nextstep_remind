@@ -1,9 +1,10 @@
 .DS_Store
 .gradle
-/build/
+**/node_modules/
+**/build/
 !gradle/wrapper/gradle-wrapper.jar
-/out/
-/target/
+**/out/
+**/target/
 
 ### STS ###
 .apt_generated

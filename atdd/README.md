@@ -1,9 +1,15 @@
-# 지하철 노선 관리 <img alt="npm" src="https://img.shields.io/badge/npm-%3E%3D%205.5.0-blue"><img alt="node" src="https://img.shields.io/badge/node-%3E%3D%209.3.0-blue"><img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fedu.nextstep.camp%2Fc%2FR89PYi5H"><img alt="GitHub" src="https://img.shields.io/github/license/next-step/atdd-subway-admin">
+# 지하철 노선 관리 <img alt="npm" src="https://img.shields.io/badge/npm-v6.14-blue"><img alt="node" src="https://img.shields.io/badge/node-14.18-blue"><img alt="python" src="https://img.shields.io/badge/python-v2.7-blue">
 
 ## 🚀 Getting Started
 
 ### Install
-#### npm 설치
+#### node 설치 후 ( 윈도우 기준 )
+```
+npm install --global --production windows-build-tools ( 설치시 멈춘것 처럼 보이면 제어판으로 파이썬 및 C++2017 설치 되었나 확인)
+or
+파이썬 2.7
+Visual C++ 2017 설설치 필요
+```
 ```
 cd frontend
 npm install
@@ -183,5 +189,4 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
  
 
 ## 📝 License
-
-This project is [MIT](https://github.com/next-step/atdd-subway-admin/blob/master/LICENSE.md) licensed.
+This project is MIT licensed.
