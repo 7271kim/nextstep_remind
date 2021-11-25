@@ -1,16 +1,56 @@
 package atdd.line;
 
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
+import atdd.line.dto.LineRequest;
+import atdd.line.dto.LineResponse;
+import atdd.station.StationAcceptantTest;
+import atdd.station.dto.StationResponse;
+import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 
 @DisplayName("노선 관리 인수테스트")
 public class LineAcceptantTest extends AcceptanceTest {
 
+    private StationResponse 강남역;
+    private StationResponse 교대역;
+
+    private LineResponse 이호선;
+
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+
+        //given
+        강남역 = StationAcceptantTest.지하철역_생성요청("강남역");
+        교대역 = StationAcceptantTest.지하철역_생성요청("교대역");
+        이호선 = 지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100);
+    }
+
     @Test
     @DisplayName("지하철 노성 생성 테스트")
     void createTest() {
+        //when
+        ExtractableResponse<Response> response = 지하철_노선_생성요청(new LineRequest("bg-red-600", "신분당선", 강남역.getId(), 교대역.getId(), 100));
+
+        //then
+        LineResponse line = response.jsonPath().getObject(".", LineResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.header("Location")).isNotBlank();
+        assertThat(line.getId()).isNotNull();
+        assertThat(line.getName()).isEqualTo("신분당선");
+        assertThat(line.getColor()).isEqualTo("bg-red-600");
+        assertThat(line.getCreatedDate()).isNotNull();
+        assertThat(line.getModifiedDate()).isNotNull();
 
     }
 
@@ -62,4 +102,25 @@ public class LineAcceptantTest extends AcceptanceTest {
 
     }
 
+    private static ExtractableResponse<Response> 지하철_노선_생성요청(LineRequest lineRequest) {
+        return RestAssured.given().log().all()
+            .body(lineRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/lines")
+            .then().log().all()
+            .extract();
+    }
+
+    public static LineResponse 지하철_노선_생성요청(String color, String name, Long upStation, Long downStation, int distance) {
+        return RestAssured.given().log().all()
+            .body(LineRequest.of(color, name, upStation, downStation, distance))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .post("/lines")
+            .then().log().all()
+            .extract()
+            .jsonPath()
+            .getObject(".", LineResponse.class);
+    }
 }
