@@ -51,4 +51,14 @@ public class StationService {
             .collect(Collectors.toList());
     }
 
+    public void deleteStationById(Long id) {
+        validateDeletion(id);
+        stationRepository.deleteById(id);
+    }
+
+    private void validateDeletion(Long id) {
+        stationRepository.findById(id).orElseThrow(InputException::new);
+
+    }
+
 }

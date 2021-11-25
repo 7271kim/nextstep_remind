@@ -110,7 +110,7 @@ public class StationAcceptantTest extends AcceptanceTest {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .when()
-            .delete("/station/0")
+            .delete("/stations/0")
             .then().log().all()
             .extract();
 
