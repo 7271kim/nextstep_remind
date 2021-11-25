@@ -1,5 +1,8 @@
 package atdd.station.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,13 @@ public class StationService {
         if (stationRequest == null || StringUtils.isBlank(stationRequest.getName())) {
             throw new InputException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<StationResponse> findAllStation() {
+        return stationRepository.findAll().stream()
+            .map(StationResponse::from)
+            .collect(Collectors.toList());
     }
 
 }
