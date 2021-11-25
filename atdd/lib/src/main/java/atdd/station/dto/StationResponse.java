@@ -2,26 +2,28 @@ package atdd.station.dto;
 
 import java.time.LocalDateTime;
 
+import atdd.station.domain.Station;
+
 public class StationResponse {
-    private int id;
+    private Long id;
     private String name;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
     public StationResponse() {}
 
-    public StationResponse(int id, String name, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public StationResponse(Long id, String name, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.name = name;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,6 +49,10 @@ public class StationResponse {
 
     public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public static StationResponse from(Station station) {
+        return new StationResponse(station.getId(), station.getName(), station.getCreatedDate(), station.getModifiedDate());
     }
 
 }

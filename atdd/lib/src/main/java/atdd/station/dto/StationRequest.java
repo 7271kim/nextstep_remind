@@ -1,5 +1,7 @@
 package atdd.station.dto;
 
+import atdd.station.domain.Station;
+
 public class StationRequest {
     private String name;
 
@@ -19,6 +21,10 @@ public class StationRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Station toStation() {
+        return new Station(name);
     }
 
 }

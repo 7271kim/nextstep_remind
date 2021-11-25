@@ -91,12 +91,12 @@ public class StationAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 역 정상 삭제 확인")
     void deleteTest() {
         //given
-        int id = 지하철역_생성요청("강남역").getId();
+        Long id = 지하철역_생성요청("강남역").getId();
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
             .when()
-            .delete("/station/" + id)
+            .delete("/stations/" + id)
             .then().log().all()
             .extract();
 
