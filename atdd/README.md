@@ -27,7 +27,68 @@ npm run dev
 ```
 
 ## 기능 요구사항
+ - 지하철 역 : 생성 / 목록 조회 / 삭제 API 개발
  - 지하철 노선 : 생성 / 목록 조회 / 조회 / 수정 / 삭제 / 구간등록 / 구간삭제 API 개발
+
+### 지하철 역 생성 request / response
+```
+POST /stations HTTP/1.1
+accept: */*
+content-type: application/json; charset=UTF-8
+
+{
+    "name": "강남역"
+}
+
+HTTP/1.1 201 
+Location: /stations/1
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+
+{
+    "id": 1,
+    "name": "강남역",
+    "createdDate": "2020-11-13T09:11:51.997",
+    "modifiedDate": "2020-11-13T09:11:51.997"
+}
+```
+
+### 지하철 역 목록 조회 request / response
+```
+GET /stations HTTP/1.1
+accept: application/json
+host: localhost:49468
+
+HTTP/1.1 200 
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+
+[
+    {
+        "id": 1,
+        "name": "강남역",
+        "createdDate": "2020-11-13T09:11:51.997",
+        "modifiedDate": "2020-11-13T09:11:51.997"
+    },
+    {
+        "id": 2,
+        "name": "교대역",
+        "createdDate": "2020-11-13T09:11:51.997",
+        "modifiedDate": "2020-11-13T09:11:51.997"
+    }
+]
+
+```
+
+### 지하철 역 삭제 request / response
+```
+DELETE /stations/1 HTTP/1.1
+accept: */*
+host: localhost:49468
+
+HTTP/1.1 204 
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
 
 ### 지하철 노선 생성 request / response
 ```
@@ -174,7 +235,6 @@ host: localhost:52165
 HTTP/1.1 204 
 Date: Fri, 13 Nov 2020 00:11:51 GMT
 ```
-
 
 ## 프로그래밍 요구사항
  - ATDD가 존재해야 한다.
