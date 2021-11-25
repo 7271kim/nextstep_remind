@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lotto.constant.Rank;
-import lotto.util.GenerateLotto;
+import lotto.util.LottoGenerator;
 
 public class LottoTicket {
 
@@ -33,7 +33,7 @@ public class LottoTicket {
         List<Lotto> autoAndMaunal = new ArrayList<>();
         autoAndMaunal.addAll(manual);
         for (int index = 0; index < price.getCount() - manual.size(); index++) {
-            autoAndMaunal.add(Lotto.of(GenerateLotto.create(excludedNumber)));
+            autoAndMaunal.add(Lotto.of(LottoGenerator.create(excludedNumber)));
         }
         return autoAndMaunal;
     }

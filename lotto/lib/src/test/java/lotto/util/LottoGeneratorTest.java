@@ -11,12 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-public class GenerateLottoTest {
+public class LottoGeneratorTest {
 
     @RepeatedTest(100)
     @DisplayName("1~45의 중복되지 않는 로또 번호 생성 테스트")
     void 로또번호생성_테스트() {
-        List<Integer> lotto = GenerateLotto.create();
+        List<Integer> lotto = LottoGenerator.create();
         boolean isSafe = true;
 
         for (int index = 0; index < lotto.size() && isSafe; index++) {
@@ -33,7 +33,7 @@ public class GenerateLottoTest {
     void 로또번호_존재여부_테스트() {
         int[] numbers = new int[45];
         for (int loop = 0; loop < 500; loop++) {
-            List<Integer> lotto = GenerateLotto.create();
+            List<Integer> lotto = LottoGenerator.create();
             for (int index = 0; index < lotto.size(); index++) {
                 numbers[lotto.get(index) - 1] = 1;
             }
@@ -53,7 +53,7 @@ public class GenerateLottoTest {
         Set<Integer> excludedNumber = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
             12, 13, 14, 15, 16, 17);
         for (int loop = 0; loop < 500; loop++) {
-            List<Integer> lotto = GenerateLotto.create(excludedNumber);
+            List<Integer> lotto = LottoGenerator.create(excludedNumber);
             for (int index = 0; index < lotto.size(); index++) {
                 numbers[lotto.get(index) - 1] = 1;
             }
@@ -73,7 +73,7 @@ public class GenerateLottoTest {
             Set<Integer> excludedNumber = Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
                 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40);
-            GenerateLotto.create(excludedNumber);
+            LottoGenerator.create(excludedNumber);
         });
     }
 }

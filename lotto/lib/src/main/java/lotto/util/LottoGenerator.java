@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GenerateLotto {
+public class LottoGenerator {
 
     private static final int START = 1;
     private static final int END = 45;
