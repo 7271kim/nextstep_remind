@@ -24,6 +24,17 @@ public class LineService {
     }
 
     private void validate(LineRequest lineRequest) {
+        emptyCheck(lineRequest);
+        alreadyLineCheck(lineRequest);
+    }
+
+    private void alreadyLineCheck(LineRequest lineRequest) {
+        lineRepository.findByName(lineRequest.getName()).ifPresent(line -> {
+            throw new InputException();
+        });
+    }
+
+    private void emptyCheck(LineRequest lineRequest) {
         if (lineRequest == null || StringUtils.isBlank(lineRequest.getName()) || StringUtils.isBlank(lineRequest.getColor())) {
             throw new InputException();
         }

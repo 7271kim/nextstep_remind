@@ -71,7 +71,13 @@ public class LineAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("존재하는 노선을 또 추가할 경우 오류 출력")
     void alreayExsistTest() {
+        //when
+        ExtractableResponse<Response> response = 지하철_노선_생성요청(new LineRequest("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100));
 
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     @Test
