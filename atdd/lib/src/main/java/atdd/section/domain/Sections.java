@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
+import atdd.station.exception.InputException;
+
 public class Sections {
 
     @OneToMany(mappedBy = "line", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -22,6 +24,14 @@ public class Sections {
 
     public List<Section> getSections() {
         return Collections.unmodifiableList(list);
+    }
+
+    public void delete(Long upstationId) {
+        Section upStation = list.stream()
+            .filter(section -> section.getId() == upstationId)
+            .findFirst()
+            .orElseThrow(InputException::new);
+        list.remove(upStation);
     }
 
 }

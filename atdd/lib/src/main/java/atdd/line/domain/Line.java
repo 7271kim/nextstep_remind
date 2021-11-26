@@ -56,4 +56,8 @@ public class Line extends BaseEntity {
         return Collections.unmodifiableList(sections.getSections());
     }
 
+    public void deleteSection(Long upstationId) {
+        sections.delete(upstationId);
+    }
+
 }

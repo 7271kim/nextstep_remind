@@ -34,4 +34,9 @@ public class SectionService {
         line.addSection(section);
     }
 
+    public void delete(Long lineId, Long stationId) {
+        Line line = lineRepository.findById(lineId).orElseThrow(InputException::new);
+        line.deleteSection(stationId);
+    }
+
 }

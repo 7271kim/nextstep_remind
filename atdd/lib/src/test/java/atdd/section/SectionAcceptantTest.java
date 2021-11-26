@@ -74,13 +74,50 @@ public class SectionAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("구간 삭제 테스트")
     void deleteTest() {
+        //given
+        지하철_구간_생성요청(강남역.getId(), 교대역.getId(), 100, 이호선.getId());
 
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 강남역.getId()))
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
-    @DisplayName("존재하지 않는 역으로 구간 등록 시 오류를 출력한다.")
+    @DisplayName("존재하지 않는 역으로 구간 삭제 시 오류를 출력한다.")
     void deleteWithEmptyStationTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 10))
+            .then().log().all()
+            .extract();
 
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 노선으로 구간 삭제 시 오류를 출력한다.")
+    void deleteWithEmptylineTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 10, 강남역.getId()))
+            .then().log().all()
+            .extract();
+
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     private ExtractableResponse<Response> 지하철_구간_생성요청(SectionRequest sectionRequest, Long lineId) {
@@ -100,8 +137,6 @@ public class SectionAcceptantTest extends AcceptanceTest {
             .when()
             .post(String.format("/lines/%d/sections", lineId))
             .then().log().all()
-            .extract()
-            .jsonPath()
-            .getObject(".", LineResponse.class);
+            .extract();
     }
 }
