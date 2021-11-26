@@ -1,11 +1,13 @@
 package atdd.line.application;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import atdd.line.domain.LineRepository;
 import atdd.line.dto.LineRequest;
 import atdd.line.dto.LineResponse;
+import atdd.station.exception.InputException;
 
 @Service
 @Transactional
@@ -22,8 +24,9 @@ public class LineService {
     }
 
     private void validate(LineRequest lineRequest) {
-        // TODO Auto-generated method stub
-
+        if (lineRequest == null || StringUtils.isBlank(lineRequest.getName()) || StringUtils.isBlank(lineRequest.getColor())) {
+            throw new InputException();
+        }
     }
 
 }

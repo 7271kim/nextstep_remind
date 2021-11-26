@@ -9,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
+import atdd.common.ErrorResponse;
 import atdd.line.dto.LineRequest;
 import atdd.line.dto.LineResponse;
 import atdd.station.StationAcceptantTest;
 import atdd.station.dto.StationResponse;
+import atdd.station.exception.InputException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -55,13 +57,19 @@ public class LineAcceptantTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("빈 값으로 생성 할 경우 오류확인")
+    @DisplayName("빈 값으로 노선 생성 할 경우 오류 출력")
     void emptyErrorTest() {
+        //when
+        ExtractableResponse<Response> response = 지하철_노선_생성요청(new LineRequest());
 
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     @Test
-    @DisplayName("존재하는 노선을 또 추가할 경우 오류 확인")
+    @DisplayName("존재하는 노선을 또 추가할 경우 오류 출력")
     void alreayExsistTest() {
 
     }
