@@ -49,6 +49,18 @@ public class Section {
         return distance;
     }
 
+    public Station getUpstation() {
+        return upstation;
+    }
+
+    public Station getDownStatoin() {
+        return downStatoin;
+    }
+
+    public boolean isBefore(Section compare) {
+        return downStatoin.equals(compare.upstation);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

@@ -1,8 +1,11 @@
 package atdd.line.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import atdd.line.domain.Line;
+import atdd.station.dto.StationResponse;
 
 public class LineResponse {
     private Long id;
@@ -10,15 +13,17 @@ public class LineResponse {
     private String name;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private List<StationResponse> stations;
 
     public LineResponse() {}
 
-    public LineResponse(Long id, String color, String name, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public LineResponse(Long id, String color, String name, LocalDateTime createdDate, LocalDateTime modifiedDate, List<StationResponse> stations) {
         this.id = id;
         this.color = color;
         this.name = name;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+        this.stations = stations;
     }
 
     public Long getId() {
@@ -61,7 +66,18 @@ public class LineResponse {
         this.modifiedDate = modifiedDate;
     }
 
+    public List<StationResponse> getStations() {
+        return stations;
+    }
+
+    public void setStations(List<StationResponse> stations) {
+        this.stations = stations;
+    }
+
     public static LineResponse from(Line line) {
-        return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(), line.getModifiedDate());
+        List<StationResponse> stations = line.getStations().stream()
+            .map(StationResponse::from)
+            .collect(Collectors.toList());
+        return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(), line.getModifiedDate(), stations);
     }
 }

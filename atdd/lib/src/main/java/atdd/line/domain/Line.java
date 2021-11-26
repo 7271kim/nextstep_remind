@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import atdd.common.BaseEntity;
 import atdd.section.domain.Section;
 import atdd.section.domain.Sections;
+import atdd.station.domain.Station;
 
 @Entity
 public class Line extends BaseEntity {
@@ -52,12 +53,12 @@ public class Line extends BaseEntity {
         sections.add(section);
     }
 
-    public List<Section> getAll() {
-        return Collections.unmodifiableList(sections.getSections());
-    }
-
     public void deleteSection(Long upstationId) {
         sections.delete(upstationId);
+    }
+
+    public List<Station> getStations() {
+        return Collections.unmodifiableList(sections.getStations());
     }
 
 }

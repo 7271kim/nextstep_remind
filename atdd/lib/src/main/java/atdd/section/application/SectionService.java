@@ -29,7 +29,7 @@ public class SectionService {
     public void createSection(Long lineId, SectionRequest request) {
         Line line = lineRepository.findById(lineId).orElseThrow(InputException::new);
         Station upStation = stationRepository.findById(request.getUpStationId()).orElseThrow(InputException::new);
-        Station downStation = stationRepository.findById(request.getUpStationId()).orElseThrow(InputException::new);
+        Station downStation = stationRepository.findById(request.getDownStationId()).orElseThrow(InputException::new);
         Section section = sectionRepository.save(request.toSection(line, upStation, downStation));
         line.addSection(section);
     }

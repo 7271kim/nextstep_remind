@@ -1,5 +1,8 @@
 package atdd.line.application;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +56,11 @@ public class LineService {
         if (lineRequest == null || StringUtils.isBlank(lineRequest.getName()) || StringUtils.isBlank(lineRequest.getColor())) {
             throw new InputException();
         }
+    }
+
+    public List<LineResponse> allLines() {
+        return lineRepository.findAll().stream()
+            .map(LineResponse::from).collect(Collectors.toList());
     }
 
 }

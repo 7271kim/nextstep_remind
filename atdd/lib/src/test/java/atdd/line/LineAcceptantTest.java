@@ -2,6 +2,8 @@ package atdd.line;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import atdd.AcceptanceTest;
 import atdd.common.ErrorResponse;
 import atdd.line.dto.LineRequest;
 import atdd.line.dto.LineResponse;
+import atdd.section.SectionAcceptantTest;
 import atdd.station.StationAcceptantTest;
 import atdd.station.dto.StationResponse;
 import atdd.station.exception.InputException;
@@ -24,7 +27,7 @@ public class LineAcceptantTest extends AcceptanceTest {
 
     private StationResponse 강남역;
     private StationResponse 교대역;
-
+    private StationResponse 역삼역;
     private LineResponse 이호선;
 
     @Override
@@ -35,7 +38,9 @@ public class LineAcceptantTest extends AcceptanceTest {
         //given
         강남역 = StationAcceptantTest.지하철역_생성요청("강남역");
         교대역 = StationAcceptantTest.지하철역_생성요청("교대역");
+        역삼역 = StationAcceptantTest.지하철역_생성요청("역삼역");
         이호선 = 지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100);
+        SectionAcceptantTest.지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 10, 이호선.getId());
     }
 
     @Test
@@ -83,7 +88,24 @@ public class LineAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("지하철 노선 목록 조회 테스트")
     void showListTest() {
+        //when
+        LineResponse response = RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/lines")
+            .then().log().all()
+            .extract()
+            .jsonPath()
+            .getList(".", LineResponse.class)
+            .get(0);
 
+        //then
+        assertThat(response.getId()).isEqualTo(이호선.getId());
+        assertThat(response.getName()).isEqualTo(이호선.getName());
+        assertThat(response.getColor()).isEqualTo(이호선.getColor());
+        assertThat(response.getStations().stream()
+            .map(StationResponse::getName)
+            .collect(Collectors.toList())).containsExactly("강남역", "교대역", "역삼역");
     }
 
     @Test
