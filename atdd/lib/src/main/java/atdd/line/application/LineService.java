@@ -4,23 +4,38 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import atdd.line.domain.Line;
 import atdd.line.domain.LineRepository;
 import atdd.line.dto.LineRequest;
 import atdd.line.dto.LineResponse;
+import atdd.section.domain.Section;
+import atdd.section.domain.SectionRepository;
+import atdd.station.domain.Station;
+import atdd.station.domain.StationRepository;
 import atdd.station.exception.InputException;
 
 @Service
 @Transactional
 public class LineService {
-    private LineRepository lineRepository;
 
-    public LineService(LineRepository lineRepository) {
+    private LineRepository lineRepository;
+    private SectionRepository sectionRepository;
+    private StationRepository stationRepository;
+
+    public LineService(LineRepository lineRepository, SectionRepository sectionRepository, StationRepository stationRepository) {
         this.lineRepository = lineRepository;
+        this.sectionRepository = sectionRepository;
+        this.stationRepository = stationRepository;
     }
 
     public LineResponse saveLine(LineRequest lineRequest) {
         validate(lineRequest);
-        return LineResponse.from(lineRepository.save(lineRequest.toLine()));
+        Line line = lineRepository.save(lineRequest.toLine());
+        Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow(InputException::new);
+        Station donwStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow(InputException::new);
+        Section section = sectionRepository.save(new Section(line, upStation, donwStation, lineRequest.getDistance()));
+        line.addSection(section);
+        return LineResponse.from(line);
     }
 
     private void validate(LineRequest lineRequest) {
