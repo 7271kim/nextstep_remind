@@ -1,8 +1,8 @@
-package atdd.line.ui;
+package atdd.section.ui;
 
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class LineControllerAdvice {
+public class SectionControllerAdvice {
 
 }

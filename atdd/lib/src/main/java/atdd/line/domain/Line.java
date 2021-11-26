@@ -1,12 +1,18 @@
 package atdd.line.domain;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import atdd.common.BaseEntity;
+import atdd.section.domain.Section;
+import atdd.section.domain.Sections;
 
 @Entity
 public class Line extends BaseEntity {
@@ -17,6 +23,9 @@ public class Line extends BaseEntity {
 
     @Column(unique = true)
     private String name;
+
+    @Embedded
+    private Sections sections;
 
     private String color;
 
@@ -37,6 +46,14 @@ public class Line extends BaseEntity {
 
     public String getColor() {
         return color;
+    }
+
+    public void addSection(Section section) {
+        sections.add(section);
+    }
+
+    public List<Section> getAll() {
+        return Collections.unmodifiableList(sections.getSections());
     }
 
 }
