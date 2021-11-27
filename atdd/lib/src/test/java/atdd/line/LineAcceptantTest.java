@@ -2,6 +2,7 @@ package atdd.line;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,8 @@ public class LineAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 노성 생성 테스트")
     void createTest() {
         //when
-        ExtractableResponse<Response> response = 지하철_노선_생성요청(new LineRequest("bg-red-600", "신분당선", 강남역.getId(), 교대역.getId(), 100));
+        ExtractableResponse<Response> response = 지하철_노선_생성요청(
+            new LineRequest("bg-red-600", "신분당선", 강남역.getId(), 교대역.getId(), 100));
 
         //then
         LineResponse line = response.jsonPath().getObject(".", LineResponse.class);
@@ -77,7 +79,8 @@ public class LineAcceptantTest extends AcceptanceTest {
     @DisplayName("존재하는 노선을 또 추가할 경우 오류 출력")
     void alreayExsistTest() {
         //when
-        ExtractableResponse<Response> response = 지하철_노선_생성요청(new LineRequest("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100));
+        ExtractableResponse<Response> response = 지하철_노선_생성요청(
+            new LineRequest("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100));
 
         //then
         ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
@@ -88,30 +91,53 @@ public class LineAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("지하철 노선 목록 조회 테스트")
     void showListTest() {
+        //given
+        LineResponse 신분당선 = 지하철_노선_생성요청("블루", "신분당선", 역삼역.getId(), 강남역.getId(), 100);
+
         //when
-        LineResponse response = RestAssured.given().log().all()
+        List<LineResponse> response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .get("/lines")
             .then().log().all()
             .extract()
             .jsonPath()
-            .getList(".", LineResponse.class)
-            .get(0);
+            .getList(".", LineResponse.class);
+
+        LineResponse 이호선_응답 = response.get(0);
+        LineResponse 신분당선_응답 = response.get(1);
 
         //then
-        assertThat(response.getId()).isEqualTo(이호선.getId());
-        assertThat(response.getName()).isEqualTo(이호선.getName());
-        assertThat(response.getColor()).isEqualTo(이호선.getColor());
-        assertThat(response.getStations().stream()
+        assertThat(response.size()).isEqualTo(2);
+        assertThat(이호선_응답.getId()).isEqualTo(이호선.getId());
+        assertThat(이호선_응답.getName()).isEqualTo(이호선.getName());
+        assertThat(이호선_응답.getColor()).isEqualTo(이호선.getColor());
+        assertThat(이호선_응답.getStations().stream()
             .map(StationResponse::getName)
             .collect(Collectors.toList())).containsExactly("강남역", "교대역", "역삼역");
+        assertThat(신분당선_응답.getStations().stream()
+            .map(StationResponse::getName)
+            .collect(Collectors.toList())).containsExactly("역삼역", "강남역");
     }
 
     @Test
     @DisplayName("지하철 특정 노선 조회")
     void showLineTest() {
+        //when
+        LineResponse response = RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/lines/" + 이호선.getId())
+            .then().log().all()
+            .extract()
+            .jsonPath()
+            .getObject(".", LineResponse.class);
 
+        //then
+        assertThat(response.getId()).isEqualTo(이호선.getId());
+        assertThat(response.getStations().stream()
+            .map(StationResponse::getName)
+            .collect(Collectors.toList())).containsExactly("강남역", "교대역", "역삼역");
     }
 
     @Test

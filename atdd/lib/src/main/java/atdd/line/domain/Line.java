@@ -18,6 +18,8 @@ import atdd.station.domain.Station;
 @Entity
 public class Line extends BaseEntity {
 
+    public static final Line EMPTY = new Line();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -25,7 +25,8 @@ public class LineService {
     private SectionRepository sectionRepository;
     private StationRepository stationRepository;
 
-    public LineService(LineRepository lineRepository, SectionRepository sectionRepository, StationRepository stationRepository) {
+    public LineService(LineRepository lineRepository, SectionRepository sectionRepository,
+            StationRepository stationRepository) {
         this.lineRepository = lineRepository;
         this.sectionRepository = sectionRepository;
         this.stationRepository = stationRepository;
@@ -35,7 +36,8 @@ public class LineService {
         validate(lineRequest);
         Line line = lineRepository.save(lineRequest.toLine());
         Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow(InputException::new);
-        Station donwStation = stationRepository.findById(lineRequest.getDownStationId()).orElseThrow(InputException::new);
+        Station donwStation = stationRepository.findById(lineRequest.getDownStationId())
+            .orElseThrow(InputException::new);
         Section section = sectionRepository.save(new Section(line, upStation, donwStation, lineRequest.getDistance()));
         line.addSection(section);
         return LineResponse.from(line);
@@ -53,7 +55,8 @@ public class LineService {
     }
 
     private void emptyCheck(LineRequest lineRequest) {
-        if (lineRequest == null || StringUtils.isBlank(lineRequest.getName()) || StringUtils.isBlank(lineRequest.getColor())) {
+        if (lineRequest == null || StringUtils.isBlank(lineRequest.getName())
+            || StringUtils.isBlank(lineRequest.getColor())) {
             throw new InputException();
         }
     }
@@ -61,6 +64,10 @@ public class LineService {
     public List<LineResponse> allLines() {
         return lineRepository.findAll().stream()
             .map(LineResponse::from).collect(Collectors.toList());
+    }
+
+    public LineResponse getLine(Long lineId) {
+        return LineResponse.from(lineRepository.findById(lineId).orElse(Line.EMPTY));
     }
 
 }

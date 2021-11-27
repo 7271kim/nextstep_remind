@@ -8,6 +8,7 @@ import atdd.line.domain.Line;
 import atdd.station.dto.StationResponse;
 
 public class LineResponse {
+
     private Long id;
     private String color;
     private String name;
@@ -17,7 +18,8 @@ public class LineResponse {
 
     public LineResponse() {}
 
-    public LineResponse(Long id, String color, String name, LocalDateTime createdDate, LocalDateTime modifiedDate, List<StationResponse> stations) {
+    public LineResponse(Long id, String color, String name, LocalDateTime createdDate, LocalDateTime modifiedDate,
+            List<StationResponse> stations) {
         this.id = id;
         this.color = color;
         this.name = name;
@@ -78,6 +80,7 @@ public class LineResponse {
         List<StationResponse> stations = line.getStations().stream()
             .map(StationResponse::from)
             .collect(Collectors.toList());
-        return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(), line.getModifiedDate(), stations);
+        return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(),
+            line.getModifiedDate(), stations);
     }
 }
