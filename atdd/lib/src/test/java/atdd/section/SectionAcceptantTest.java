@@ -10,12 +10,13 @@ import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
 import atdd.common.ErrorResponse;
+import atdd.common.InputException;
 import atdd.line.LineAcceptantTest;
 import atdd.line.dto.LineResponse;
 import atdd.section.dto.SectionRequest;
+import atdd.section.exception.AlreadyExistUpDownStationException;
 import atdd.station.StationAcceptantTest;
 import atdd.station.dto.StationResponse;
-import atdd.station.exception.InputException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -25,7 +26,10 @@ public class SectionAcceptantTest extends AcceptanceTest {
 
     private StationResponse 강남역;
     private StationResponse 교대역;
+    private StationResponse 서초역;
+
     private LineResponse 이호선;
+    private StationResponse 역삼역;
 
     @Override
     @BeforeEach
@@ -35,6 +39,9 @@ public class SectionAcceptantTest extends AcceptanceTest {
         //given
         강남역 = StationAcceptantTest.지하철역_생성요청("강남역");
         교대역 = StationAcceptantTest.지하철역_생성요청("교대역");
+        서초역 = StationAcceptantTest.지하철역_생성요청("서초역");
+        역삼역 = StationAcceptantTest.지하철역_생성요청("역삼역");
+
         이호선 = LineAcceptantTest.지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100);
     }
 
@@ -42,10 +49,37 @@ public class SectionAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 구간 등록 테스트")
     void createTest() {
         //when
-        ExtractableResponse<Response> response = 지하철_구간_생성요청(new SectionRequest(강남역.getId(), 교대역.getId(), 10), 이호선.getId());
+
+        ExtractableResponse<Response> response = 지하철_구간_생성요청(new SectionRequest(강남역.getId(), 서초역.getId(), 10), 이호선.getId());
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("기존 존재하는 구간으로 등록 시 오류 출력")
+    void createExistTest() {
+        //when
+        ExtractableResponse<Response> response = 지하철_구간_생성요청(new SectionRequest(강남역.getId(), 교대역.getId(), 10), 이호선.getId());
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(AlreadyExistUpDownStationException.MESSAGE);
+    }
+
+    @Test
+    @DisplayName("상행성 하행선 둘다 매칭되지 않을 때 오류 출력")
+    void UpDownNoExistTest() {
+        //given
+        StationResponse 이대역 = StationAcceptantTest.지하철역_생성요청("이대역");
+        StationResponse 신촌역 = StationAcceptantTest.지하철역_생성요청("신촌역");
+
+        //when
+        ExtractableResponse<Response> response = 지하철_구간_생성요청(new SectionRequest(이대역.getId(), 신촌역.getId(), 10), 이호선.getId());
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     @Test
@@ -102,6 +136,19 @@ public class SectionAcceptantTest extends AcceptanceTest {
         ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
+    }
+
+    @Test
+    @DisplayName("역과 역 사이 구간 추가")
+    void 구간_사이추가() {
+        //강남 - 서초역 - 교대역 - 역삼역
+        //when
+        지하철_구간_생성요청(강남역.getId(), 서초역.getId(), 50, 이호선.getId());
+        지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 100, 이호선.getId());
+
+        //then
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("강남역", "서초역", "교대역", "역삼역");
+
     }
 
     @Test

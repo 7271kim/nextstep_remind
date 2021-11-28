@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import atdd.common.InputException;
 import atdd.line.domain.Line;
 import atdd.line.domain.LineRepository;
 import atdd.line.dto.LineRequest;
@@ -15,7 +16,6 @@ import atdd.section.domain.Section;
 import atdd.section.domain.SectionRepository;
 import atdd.station.domain.Station;
 import atdd.station.domain.StationRepository;
-import atdd.station.exception.InputException;
 
 @Service
 @Transactional

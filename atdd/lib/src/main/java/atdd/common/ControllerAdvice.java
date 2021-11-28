@@ -5,14 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import atdd.common.ErrorResponse;
-import atdd.station.exception.InputException;
-
 @RestControllerAdvice
 public class ControllerAdvice {
 
     @ExceptionHandler(InputException.class)
-    public ResponseEntity<ErrorResponse> stationsNoExistException(InputException exception) {
+    public ResponseEntity<ErrorResponse> getInputException(InputException exception) {
         return getBadResponse(exception.getMessage());
     }
 

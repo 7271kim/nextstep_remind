@@ -61,6 +61,34 @@ public class Section {
         return downStatoin.equals(compare.upstation);
     }
 
+    public boolean isSameSection(Section compare) {
+        return upstation.equals(compare.upstation) && downStatoin.equals(compare.downStatoin);
+    }
+
+    public boolean isMatchedStation(Section compare) {
+        return upstation.equals(compare.upstation) || upstation.equals(compare.getDownStatoin()) || downStatoin.equals(compare.downStatoin) || downStatoin.equals(compare.getUpstation());
+    }
+
+    public boolean isSameUpstation(Section compare) {
+        return upstation.equals(compare.upstation);
+    }
+
+    public boolean isSameDownstation(Section compare) {
+        return downStatoin.equals(compare.downStatoin);
+    }
+
+    public void updateUpstation(Station station) {
+        this.upstation = station;
+    }
+
+    public void updateDownstation(Station station) {
+        this.downStatoin = station;
+    }
+
+    public void updateDistance(int distance) {
+        this.distance = distance;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

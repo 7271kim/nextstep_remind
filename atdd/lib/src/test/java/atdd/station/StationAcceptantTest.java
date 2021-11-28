@@ -12,9 +12,9 @@ import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
 import atdd.common.ErrorResponse;
+import atdd.common.InputException;
 import atdd.station.dto.StationRequest;
 import atdd.station.dto.StationResponse;
-import atdd.station.exception.InputException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

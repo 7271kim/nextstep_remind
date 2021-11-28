@@ -7,10 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import atdd.common.InputException;
 import atdd.station.domain.StationRepository;
 import atdd.station.dto.StationRequest;
 import atdd.station.dto.StationResponse;
-import atdd.station.exception.InputException;
 
 @Service
 @Transactional

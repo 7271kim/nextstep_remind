@@ -13,12 +13,12 @@ import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
 import atdd.common.ErrorResponse;
+import atdd.common.InputException;
 import atdd.line.dto.LineRequest;
 import atdd.line.dto.LineResponse;
 import atdd.section.SectionAcceptantTest;
 import atdd.station.StationAcceptantTest;
 import atdd.station.dto.StationResponse;
-import atdd.station.exception.InputException;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -232,7 +232,13 @@ public class LineAcceptantTest extends AcceptanceTest {
             .getObject(".", LineResponse.class);
     }
 
-    private LineResponse 지하철_노선_조회(Long lineId) {
+    public static List<String> 지하철_노선의_지하철역_조회(Long lineId) {
+        return 지하철_노선_조회(lineId).getStations().stream()
+            .map(StationResponse::getName)
+            .collect(Collectors.toList());
+    }
+
+    private static LineResponse 지하철_노선_조회(Long lineId) {
         return RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()

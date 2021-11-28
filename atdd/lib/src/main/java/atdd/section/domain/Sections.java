@@ -7,8 +7,9 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
+import atdd.common.InputException;
+import atdd.section.exception.AlreadyExistUpDownStationException;
 import atdd.station.domain.Station;
-import atdd.station.exception.InputException;
 
 public class Sections {
 
@@ -22,9 +23,32 @@ public class Sections {
     }
 
     public void add(Section section) {
-        if (!list.contains(section)) {
-            list.add(section);
+        checkAlreadyExist(section);
+        updateSection(section);
+    }
+
+    private void updateSection(Section section) {
+        Section updateSection = list.stream()
+            .filter(section::isMatchedStation)
+            .findFirst().orElseThrow(InputException::new);
+
+        if (section.isSameUpstation(updateSection)) {
+            updateSection.updateUpstation(section.getDownStatoin());
+            updateSection.updateDistance(updateSection.getDistance() - section.getDistance());
         }
+
+        if (section.isSameDownstation(updateSection)) {
+            updateSection.updateDownstation(section.getUpstation());
+            updateSection.updateDistance(updateSection.getDistance() - section.getDistance());
+        }
+
+        list.add(section);
+    }
+
+    private void checkAlreadyExist(Section section) {
+        list.stream().filter(section::isSameSection).findAny().ifPresent(loop -> {
+            throw new AlreadyExistUpDownStationException();
+        });
     }
 
     public List<Section> getSections() {
