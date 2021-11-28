@@ -63,4 +63,9 @@ public class Line extends BaseEntity {
         return Collections.unmodifiableList(sections.getStations());
     }
 
+    public void update(String color, String name) {
+        this.color = color;
+        this.name = name;
+    }
+
 }

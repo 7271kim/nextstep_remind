@@ -37,7 +37,7 @@ public class LineService {
         Line line = lineRepository.save(lineRequest.toLine());
         Station upStation = stationRepository.findById(lineRequest.getUpStationId()).orElseThrow(InputException::new);
         Station donwStation = stationRepository.findById(lineRequest.getDownStationId())
-            .orElseThrow(InputException::new);
+                .orElseThrow(InputException::new);
         Section section = sectionRepository.save(new Section(line, upStation, donwStation, lineRequest.getDistance()));
         line.addSection(section);
         return LineResponse.from(line);
@@ -62,12 +62,16 @@ public class LineService {
     }
 
     public List<LineResponse> allLines() {
-        return lineRepository.findAll().stream()
-            .map(LineResponse::from).collect(Collectors.toList());
+        return lineRepository.findAll().stream().map(LineResponse::from).collect(Collectors.toList());
     }
 
     public LineResponse getLine(Long lineId) {
         return LineResponse.from(lineRepository.findById(lineId).orElse(Line.EMPTY));
+    }
+
+    public void updateLine(Long lineId, LineRequest request) {
+        Line line = lineRepository.findById(lineId).orElseThrow(InputException::new);
+        line.update(request.getColor(), request.getName());
     }
 
 }

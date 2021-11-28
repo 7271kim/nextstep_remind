@@ -92,7 +92,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 노선 목록 조회 테스트")
     void showListTest() {
         //given
-        LineResponse 신분당선 = 지하철_노선_생성요청("블루", "신분당선", 역삼역.getId(), 강남역.getId(), 100);
+        지하철_노선_생성요청("블루", "신분당선", 역삼역.getId(), 강남역.getId(), 100);
 
         //when
         List<LineResponse> response = RestAssured.given().log().all()
@@ -124,14 +124,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 특정 노선 조회")
     void showLineTest() {
         //when
-        LineResponse response = RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-            .get("/lines/" + 이호선.getId())
-            .then().log().all()
-            .extract()
-            .jsonPath()
-            .getObject(".", LineResponse.class);
+        LineResponse response = 지하철_노선_조회(이호선.getId());
 
         //then
         assertThat(response.getId()).isEqualTo(이호선.getId());
@@ -143,13 +136,38 @@ public class LineAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("지하철 노성 수정 확인")
     void modifyTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .body(LineRequest.of("bg-blue-600", "구분당선"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/lines/" + 이호선.getId())
+            .then().log().all()
+            .extract();
+        //then
 
+        LineResponse line = 지하철_노선_조회(이호선.getId());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(line.getColor()).isEqualTo("bg-blue-600");
+        assertThat(line.getName()).isEqualTo("구분당선");
     }
 
     @Test
     @DisplayName("존재 하지 않는 노선 수정 시 오류 확인")
     void emptyLineModifyErrorTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .body(LineRequest.of("bg-blue-600", "구분당선"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/lines/7")
+                .then().log().all()
+                .extract();
 
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     @Test
@@ -180,6 +198,17 @@ public class LineAcceptantTest extends AcceptanceTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/lines")
+            .then().log().all()
+            .extract()
+            .jsonPath()
+            .getObject(".", LineResponse.class);
+    }
+
+    private LineResponse 지하철_노선_조회(Long lineId) {
+        return RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/lines/" + lineId)
             .then().log().all()
             .extract()
             .jsonPath()

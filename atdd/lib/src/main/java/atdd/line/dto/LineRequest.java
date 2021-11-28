@@ -11,6 +11,11 @@ public class LineRequest {
 
     public LineRequest() {}
 
+    public LineRequest(String color, String name) {
+        this.color = color;
+        this.name = name;
+    }
+
     public LineRequest(String color, String name, Long upStationId, Long downStationId, int distance) {
         this.color = color;
         this.name = name;
@@ -65,6 +70,10 @@ public class LineRequest {
 
     public Line toLine() {
         return new Line(color, name);
+    }
+
+    public static LineRequest of(String color, String name) {
+        return new LineRequest(color, name);
     }
 
 }
