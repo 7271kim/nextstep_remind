@@ -157,12 +157,12 @@ public class LineAcceptantTest extends AcceptanceTest {
     void emptyLineModifyErrorTest() {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .body(LineRequest.of("bg-blue-600", "구분당선"))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .put("/lines/7")
-                .then().log().all()
-                .extract();
+            .body(LineRequest.of("bg-blue-600", "구분당선"))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .put("/lines/7")
+            .then().log().all()
+            .extract();
 
         //then
         ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
@@ -173,13 +173,41 @@ public class LineAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("지하철 노선 제거 확인")
     void deleteTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete("/lines/" + 이호선.getId())
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+
+        assertThat(RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get("/lines/" + 이호선.getId())
+            .then().log().all()
+            .extract()
+            .statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 
     }
 
     @Test
     @DisplayName("존재 하지 않는 노선 삭제 시 오류 확인")
     void emptyLineRemoveErrorTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .delete("/lines/7")
+            .then().log().all()
+            .extract();
 
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(InputException.MESSAGE);
     }
 
     private static ExtractableResponse<Response> 지하철_노선_생성요청(LineRequest lineRequest) {
