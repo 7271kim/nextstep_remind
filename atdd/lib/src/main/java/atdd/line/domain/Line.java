@@ -51,6 +51,10 @@ public class Line extends BaseEntity {
         return color;
     }
 
+    public void addFirst(Section section) {
+        sections.addFirst(section);
+    }
+
     public void addSection(Section section) {
         sections.add(section);
     }

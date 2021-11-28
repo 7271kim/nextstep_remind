@@ -39,7 +39,7 @@ public class LineService {
         Station donwStation = stationRepository.findById(lineRequest.getDownStationId())
             .orElseThrow(InputException::new);
         Section section = sectionRepository.save(new Section(line, upStation, donwStation, lineRequest.getDistance()));
-        line.addSection(section);
+        line.addFirst(section);
         return LineResponse.from(line);
     }
 

@@ -22,6 +22,10 @@ public class Sections {
         this.list = list;
     }
 
+    public void addFirst(Section section) {
+        list.add(section);
+    }
+
     public void add(Section section) {
         checkAlreadyExist(section);
         updateSection(section);
