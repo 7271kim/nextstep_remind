@@ -15,6 +15,7 @@ import atdd.line.LineAcceptantTest;
 import atdd.line.dto.LineResponse;
 import atdd.section.dto.SectionRequest;
 import atdd.section.exception.AlreadyExistUpDownStationException;
+import atdd.section.exception.DistanceLongException;
 import atdd.station.StationAcceptantTest;
 import atdd.station.dto.StationResponse;
 import io.restassured.RestAssured;
@@ -108,8 +109,29 @@ public class SectionAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("구간 삭제 테스트")
     void deleteTest() {
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 강남역.getId()))
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId()).size()).isZero();
+    }
+
+    @Test
+    @DisplayName("중간 구간 삭제 테스트")
+    void deleteInnerTest() {
         //given
-        지하철_구간_생성요청(강남역.getId(), 교대역.getId(), 100, 이호선.getId());
+        StationResponse 사당역 = StationAcceptantTest.지하철역_생성요청("사당역");
+
+        //사당역 - 강남역 - 서초역 - 교대역 - 역삼역
+        //when
+        지하철_구간_생성요청(강남역.getId(), 서초역.getId(), 50, 이호선.getId());
+        지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 100, 이호선.getId());
+        지하철_구간_생성요청(사당역.getId(), 강남역.getId(), 100, 이호선.getId());
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -120,6 +142,11 @@ public class SectionAcceptantTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("사당역", "서초역", "교대역", "역삼역");
+        ErrorResponse errorResponse = 지하철_구간_생성요청(new SectionRequest(사당역.getId(), 강남역.getId(), 150), 이호선.getId())
+            .jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(errorResponse.getMessage()).isEqualTo(DistanceLongException.MESSAGE);
+
     }
 
     @Test
@@ -141,14 +168,29 @@ public class SectionAcceptantTest extends AcceptanceTest {
     @Test
     @DisplayName("역과 역 사이 구간 추가")
     void 구간_사이추가() {
-        //강남 - 서초역 - 교대역 - 역삼역
+        //given
+        StationResponse 사당역 = StationAcceptantTest.지하철역_생성요청("사당역");
+
+        //사당역 - 강남역 - 서초역 - 교대역 - 역삼역
         //when
         지하철_구간_생성요청(강남역.getId(), 서초역.getId(), 50, 이호선.getId());
         지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 100, 이호선.getId());
+        지하철_구간_생성요청(사당역.getId(), 강남역.getId(), 100, 이호선.getId());
 
         //then
-        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("강남역", "서초역", "교대역", "역삼역");
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("사당역", "강남역", "서초역", "교대역", "역삼역");
+    }
 
+    @Test
+    @DisplayName("역과 역 사이 구간 추가 중 거리가 기존보다 크거나 같을 경우는 에러를 발생시킨다.")
+    void 구간_사이추가_거리_유효성확인() {
+        //강남역 - 서초역 - 교대역
+        //when
+        ExtractableResponse<Response> response = 지하철_구간_생성요청(new SectionRequest(강남역.getId(), 서초역.getId(), 100), 이호선.getId());
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(DistanceLongException.MESSAGE);
     }
 
     @Test

@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import atdd.line.domain.Line;
+import atdd.section.exception.DistanceLongException;
 import atdd.station.domain.Station;
 
 @Entity
@@ -86,6 +87,9 @@ public class Section {
     }
 
     public void updateDistance(int distance) {
+        if (distance <= 0) {
+            throw new DistanceLongException();
+        }
         this.distance = distance;
     }
 

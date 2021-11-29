@@ -69,7 +69,7 @@ public class Sections {
 
     public List<Station> getStations() {
         List<Station> result = new ArrayList<>();
-        if (list == null) {
+        if (list == null || list.isEmpty()) {
             return result;
         }
         Section nextSection = findStartSection();
