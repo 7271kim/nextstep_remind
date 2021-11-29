@@ -8,6 +8,7 @@ import atdd.common.ControllerAdvice;
 import atdd.common.ErrorResponse;
 import atdd.section.exception.AlreadyExistUpDownStationException;
 import atdd.section.exception.DistanceLongException;
+import atdd.section.exception.MinimumException;
 
 @RestControllerAdvice
 public class SectionControllerAdvice extends ControllerAdvice {
@@ -19,6 +20,11 @@ public class SectionControllerAdvice extends ControllerAdvice {
 
     @ExceptionHandler(DistanceLongException.class)
     public ResponseEntity<ErrorResponse> distanceLongException(DistanceLongException exception) {
+        return getBadResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(MinimumException.class)
+    public ResponseEntity<ErrorResponse> minimumException(MinimumException exception) {
         return getBadResponse(exception.getMessage());
     }
 

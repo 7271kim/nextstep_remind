@@ -1,6 +1,7 @@
 package atdd.section.domain;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import atdd.line.domain.Line;
+import atdd.section.exception.MinimumException;
 import atdd.station.domain.Station;
 
 public class SectionsTest {
@@ -36,7 +38,7 @@ public class SectionsTest {
         교대_역삼_구간 = new Section(3l, 이호선, 교대역, 역삼역, 20);
 
         sections = new Sections();
-        sections.addFirst(강남_교대_구간);
+        sections.add(강남_교대_구간);
         sections.add(교대_역삼_구간);
         sections.add(삼성_강남_구간);
     }
@@ -52,10 +54,38 @@ public class SectionsTest {
     @Test
     @DisplayName("중간 역 잘 삭제 되는지 확인")
     void deleteTest() {
-        sections.delete(강남역.getId());
+        sections.delete(강남역);
         assertThat(sections.getStations().stream()
             .map(Station::getName)
             .collect(Collectors.toList())).containsExactly("삼성역", "교대역", "역삼역");
+    }
+
+    @Test
+    @DisplayName("끝 역 잘 삭제 되는지 확인")
+    void deleteEndTest() {
+        sections.delete(역삼역);
+        assertThat(sections.getStations().stream()
+            .map(Station::getName)
+            .collect(Collectors.toList())).containsExactly("삼성역", "강남역", "교대역");
+    }
+
+    @Test
+    @DisplayName("첫 역 잘 삭제 되는지 확인")
+    void deleteStartTest() {
+        sections.delete(삼성역);
+        assertThat(sections.getStations().stream()
+            .map(Station::getName)
+            .collect(Collectors.toList())).containsExactly("강남역", "교대역", "역삼역");
+    }
+
+    @Test
+    @DisplayName("삭제는 가능하지만 최소 한개의 구간은 존재해야 한다.")
+    void deleteAllTest() {
+        sections.delete(삼성역);
+        sections.delete(강남역);
+        assertThrows(MinimumException.class, () -> {
+            sections.delete(교대역);
+        });
     }
 
 }

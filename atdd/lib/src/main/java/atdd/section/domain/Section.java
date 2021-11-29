@@ -79,8 +79,16 @@ public class Section {
         return upstation.equals(compare.upstation);
     }
 
+    public boolean isSameUpstation(Station station) {
+        return upstation.equals(station);
+    }
+
     public boolean isSameDownstation(Section compare) {
         return downStatoin.equals(compare.downStatoin);
+    }
+
+    public boolean isSameDownstation(Station station) {
+        return downStatoin.equals(station);
     }
 
     public void updateUpstation(Station station) {

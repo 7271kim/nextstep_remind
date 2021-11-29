@@ -9,6 +9,7 @@ import javax.persistence.OneToMany;
 
 import atdd.common.InputException;
 import atdd.section.exception.AlreadyExistUpDownStationException;
+import atdd.section.exception.MinimumException;
 import atdd.station.domain.Station;
 
 public class Sections {
@@ -22,11 +23,11 @@ public class Sections {
         this.list = list;
     }
 
-    public void addFirst(Section section) {
-        list.add(section);
-    }
-
     public void add(Section section) {
+        if (list.isEmpty()) {
+            list.add(section);
+            return;
+        }
         checkAlreadyExist(section);
         updateSection(section);
     }
@@ -59,18 +60,36 @@ public class Sections {
         return Collections.unmodifiableList(list);
     }
 
-    public void delete(Long upstationId) {
-        Section upStationSection = list.stream()
-            .filter(section -> section.getUpstation().getId().equals(upstationId))
+    public void delete(Station station) {
+        validate();
+        Section endSection = findEndSection();
+        if (endSection.isSameDownstation(station)) {
+            list.remove(endSection);
+            return;
+        }
+
+        Section removeSection = list.stream()
+            .filter(section -> section.isSameUpstation(station))
             .findFirst()
             .orElseThrow(InputException::new);
-        if (isInnerSection(upStationSection)) {
-            Section next = findNextSection(upStationSection);
-            Section before = findBeforeSection(upStationSection);
-            before.updateDistance(next.getDistance() + before.getDistance());
-            before.updateDownstation(upStationSection.getDownStatoin());
+
+        updateDistance(removeSection);
+        list.remove(removeSection);
+    }
+
+    private void validate() {
+        if (list == null || list.size() == 1) {
+            throw new MinimumException();
         }
-        list.remove(upStationSection);
+    }
+
+    private void updateDistance(Section removeSection) {
+        if (isInnerSection(removeSection)) {
+            Section next = findNextSection(removeSection);
+            Section before = findBeforeSection(removeSection);
+            before.updateDistance(next.getDistance() + before.getDistance());
+            before.updateDownstation(removeSection.getDownStatoin());
+        }
     }
 
     public List<Station> getStations() {
@@ -109,6 +128,13 @@ public class Sections {
     private Section findStartSection() {
         return list.stream()
             .filter(this::hasNoBefore)
+            .findFirst()
+            .orElseThrow(InputException::new);
+    }
+
+    private Section findEndSection() {
+        return list.stream()
+            .filter(this::hasNoNext)
             .findFirst()
             .orElseThrow(InputException::new);
     }
