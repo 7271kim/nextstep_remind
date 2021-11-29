@@ -2,7 +2,6 @@ package atdd.section.domain;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,15 +25,20 @@ public class SectionsTest {
 
     @BeforeEach
     void setUp() {
+        // 삼성 - 강남 - 교대 - 역삼
         이호선 = new Line("초록", "이호선");
-        강남역 = new Station("강남역");
-        교대역 = new Station("교대역");
-        역삼역 = new Station("역삼역");
-        삼성역 = new Station("삼성역");
-        삼성_강남_구간 = new Section(이호선, 삼성역, 강남역, 15);
-        강남_교대_구간 = new Section(이호선, 강남역, 교대역, 10);
-        교대_역삼_구간 = new Section(이호선, 교대역, 역삼역, 20);
-        sections = new Sections(List.of(강남_교대_구간, 교대_역삼_구간, 삼성_강남_구간));
+        강남역 = new Station(1l, "강남역");
+        교대역 = new Station(2l, "교대역");
+        역삼역 = new Station(3l, "역삼역");
+        삼성역 = new Station(4l, "삼성역");
+        삼성_강남_구간 = new Section(1l, 이호선, 삼성역, 강남역, 15);
+        강남_교대_구간 = new Section(2l, 이호선, 강남역, 교대역, 10);
+        교대_역삼_구간 = new Section(3l, 이호선, 교대역, 역삼역, 20);
+
+        sections = new Sections();
+        sections.addFirst(강남_교대_구간);
+        sections.add(교대_역삼_구간);
+        sections.add(삼성_강남_구간);
     }
 
     @Test
@@ -43,6 +47,15 @@ public class SectionsTest {
         assertThat(sections.getStations().stream()
             .map(Station::getName)
             .collect(Collectors.toList())).containsExactly("삼성역", "강남역", "교대역", "역삼역");
+    }
+
+    @Test
+    @DisplayName("중간 역 잘 삭제 되는지 확인")
+    void deleteTest() {
+        sections.delete(강남역.getId());
+        assertThat(sections.getStations().stream()
+            .map(Station::getName)
+            .collect(Collectors.toList())).containsExactly("삼성역", "교대역", "역삼역");
     }
 
 }

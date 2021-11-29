@@ -60,11 +60,17 @@ public class Sections {
     }
 
     public void delete(Long upstationId) {
-        Section upStation = list.stream()
-            .filter(section -> section.getId() == upstationId)
+        Section upStationSection = list.stream()
+            .filter(section -> section.getUpstation().getId().equals(upstationId))
             .findFirst()
             .orElseThrow(InputException::new);
-        list.remove(upStation);
+        if (isInnerSection(upStationSection)) {
+            Section next = findNextSection(upStationSection);
+            Section before = findBeforeSection(upStationSection);
+            before.updateDistance(next.getDistance() + before.getDistance());
+            before.updateDownstation(upStationSection.getDownStatoin());
+        }
+        list.remove(upStationSection);
     }
 
     public List<Station> getStations() {
@@ -86,9 +92,16 @@ public class Sections {
         return result;
     }
 
-    private Section findNextSection(Section before) {
+    private Section findNextSection(Section findSection) {
         return list.stream()
-            .filter(before::isBefore)
+            .filter(findSection::isBefore)
+            .findAny()
+            .orElse(null);
+    }
+
+    private Section findBeforeSection(Section findSection) {
+        return list.stream()
+            .filter(section -> section.isBefore(findSection))
             .findAny()
             .orElse(null);
     }
@@ -100,19 +113,16 @@ public class Sections {
             .orElseThrow(InputException::new);
     }
 
-    private Section findEndSection() {
-        return list.stream()
-            .filter(this::hasNoNext)
-            .findFirst()
-            .orElseThrow(InputException::new);
+    private boolean hasNoBefore(Section findSection) {
+        return list.stream().noneMatch(section -> section.isBefore(findSection));
     }
 
-    private boolean hasNoBefore(Section compare) {
-        return list.stream().noneMatch(section -> section.isBefore(compare));
+    private boolean hasNoNext(Section findSection) {
+        return list.stream().noneMatch(findSection::isBefore);
     }
 
-    private boolean hasNoNext(Section compare) {
-        return list.stream().noneMatch(compare::isBefore);
+    private boolean isInnerSection(Section compare) {
+        return !hasNoBefore(compare) && !hasNoNext(compare);
     }
 
 }
