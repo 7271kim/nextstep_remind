@@ -62,11 +62,11 @@ public class LineService {
     }
 
     public List<LineResponse> allLines() {
-        return lineRepository.findAll().stream().map(LineResponse::from).collect(Collectors.toList());
+        return lineRepository.findAllJoinFetch().stream().map(LineResponse::from).collect(Collectors.toList());
     }
 
     public LineResponse getLine(Long lineId) {
-        return LineResponse.from(lineRepository.findById(lineId).orElse(Line.EMPTY));
+        return LineResponse.from(lineRepository.findById(lineId).orElseThrow(InputException::new));
     }
 
     public void updateLine(Long lineId, LineRequest request) {

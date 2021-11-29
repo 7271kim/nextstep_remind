@@ -29,6 +29,7 @@ public class Section {
     private Station downStatoin;
 
     @ManyToOne
+    @JoinColumn(name = "line_id")
     private Line line;
 
     private int distance;
