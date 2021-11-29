@@ -112,12 +112,8 @@ public class LineAcceptantTest extends AcceptanceTest {
         assertThat(이호선_응답.getId()).isEqualTo(이호선.getId());
         assertThat(이호선_응답.getName()).isEqualTo(이호선.getName());
         assertThat(이호선_응답.getColor()).isEqualTo(이호선.getColor());
-        assertThat(이호선_응답.getStations().stream()
-            .map(StationResponse::getName)
-            .collect(Collectors.toList())).containsExactly("강남역", "교대역", "역삼역");
-        assertThat(신분당선_응답.getStations().stream()
-            .map(StationResponse::getName)
-            .collect(Collectors.toList())).containsExactly("역삼역", "강남역");
+        assertThat(신분당선_응답.getName()).isEqualTo(신분당선_응답.getName());
+        assertThat(신분당선_응답.getColor()).isEqualTo(신분당선_응답.getColor());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package atdd.line.dto;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,5 +83,10 @@ public class LineResponse {
             .collect(Collectors.toList());
         return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(),
             line.getModifiedDate(), stations);
+    }
+
+    public static LineResponse exceptStationFrom(Line line) {
+        return new LineResponse(line.getId(), line.getColor(), line.getName(), line.getCreatedDate(),
+            line.getModifiedDate(), Collections.emptyList());
     }
 }

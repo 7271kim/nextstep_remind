@@ -61,8 +61,12 @@ public class LineService {
         }
     }
 
-    public List<LineResponse> allLines() {
+    /*public List<LineResponse> allLines() {
         return lineRepository.findAllJoinFetch().stream().map(LineResponse::from).collect(Collectors.toList());
+    }*/
+
+    public List<LineResponse> allLines() {
+        return lineRepository.findAll().stream().map(LineResponse::exceptStationFrom).collect(Collectors.toList());
     }
 
     public LineResponse getLine(Long lineId) {
