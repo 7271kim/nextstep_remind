@@ -107,21 +107,6 @@ public class SectionAcceptantTest extends AcceptanceTest {
     }
 
     @Test
-    @DisplayName("구간 삭제 테스트")
-    void deleteTest() {
-        //when
-        ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .when()
-            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 강남역.getId()))
-            .then().log().all()
-            .extract();
-
-        //then
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId()).size()).isZero();
-    }
-
-    @Test
     @DisplayName("중간 구간 삭제 테스트")
     void deleteInnerTest() {
         //given
@@ -147,6 +132,48 @@ public class SectionAcceptantTest extends AcceptanceTest {
             .jsonPath().getObject(".", ErrorResponse.class);
         assertThat(errorResponse.getMessage()).isEqualTo(DistanceLongException.MESSAGE);
 
+    }
+
+    @Test
+    @DisplayName("시작  구간 삭제 테스트")
+    void deleteStartTest() {
+        //given
+        StationResponse 사당역 = StationAcceptantTest.지하철역_생성요청("사당역");
+
+        //사당역 - 강남역 - 교대역
+        //when
+        지하철_구간_생성요청(사당역.getId(), 강남역.getId(), 100, 이호선.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 사당역.getId()))
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("강남역", "교대역");
+    }
+
+    @Test
+    @DisplayName("끝 구간 삭제 테스트")
+    void deleteEndTest() {
+        //given
+        StationResponse 사당역 = StationAcceptantTest.지하철역_생성요청("사당역");
+
+        //사당역 - 강남역 - 교대역
+        //when
+        지하철_구간_생성요청(사당역.getId(), 강남역.getId(), 100, 이호선.getId());
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+            .when()
+            .delete(String.format("/lines/%d/sections?stationId=%d", 이호선.getId(), 교대역.getId()))
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(LineAcceptantTest.지하철_노선의_지하철역_조회(이호선.getId())).containsExactly("사당역", "강남역");
     }
 
     @Test
