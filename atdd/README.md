@@ -237,6 +237,154 @@ HTTP/1.1 204
 Date: Fri, 13 Nov 2020 00:11:51 GMT
 ```
 
+### 경로 조회 request / response
+```
+GET /paths?source=1&target=6 HTTP/1.1
+accept: */*
+host: localhost:52165
+Headers: Accept=application/json
+        Content-Type=application/json; charset=UTF-8
+
+HTTP/1.1 200 
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+{
+    "stations": [
+        {
+            "id": 5,
+            "name": "양재시민의숲역",
+            "createdAt": "2020-05-09T23:54:12.007"
+        },
+        {
+            "id": 4,
+            "name": "양재역",
+            "createdAt": "2020-05-09T23:54:11.995"
+        },
+        {
+            "id": 1,
+            "name": "강남역",
+            "createdAt": "2020-05-09T23:54:11.855"
+        },
+        {
+            "id": 2,
+            "name": "역삼역",
+            "createdAt": "2020-05-09T23:54:11.876"
+        },
+        {
+            "id": 3,
+            "name": "선릉역",
+            "createdAt": "2020-05-09T23:54:11.893"
+        }
+    ],
+    "distance": 40
+}
+```
+
+### 토큰 발급 request / response
+```
+POST /login/token HTTP/1.1
+content-type: application/json; charset=UTF-8
+accept: application/json
+{
+    "password": "password",
+    "email": "email@email.com"
+}
+
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 27 Dec 2020 04:32:26 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY"
+}
+```
+
+### 즐겨찾기 생성 request / response
+```
+POST /favorites HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+accept: */*
+content-type: application/json; charset=UTF-8
+content-length: 27
+host: localhost:50336
+connection: Keep-Alive
+user-agent: Apache-HttpClient/4.5.13 (Java/14.0.2)
+accept-encoding: gzip,deflate
+{
+    "source": "1",
+    "target": "3"
+}
+
+HTTP/1.1 201 Created
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 0
+Date: Sun, 27 Dec 2020 04:32:26 GMT
+Location: /favorites/1
+```
+
+### 즐겨찾기 목록 조회 request / response
+```
+GET /favorites HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+accept: application/json
+host: localhost:50336
+connection: Keep-Alive
+user-agent: Apache-HttpClient/4.5.13 (Java/14.0.2)
+accept-encoding: gzip,deflate
+
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 27 Dec 2020 04:32:26 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+    {
+        "id": 1,
+        "source": {
+            "id": 1,
+            "name": "강남역",
+            "createdDate": "2020-12-27T13:32:26.364439",
+            "modifiedDate": "2020-12-27T13:32:26.364439"
+        },
+        "target": {
+            "id": 3,
+            "name": "정자역",
+            "createdDate": "2020-12-27T13:32:26.486256",
+            "modifiedDate": "2020-12-27T13:32:26.486256"
+        }
+    }
+]
+```
+### 즐겨찾기 삭제 request / response
+```
+DELETE /favorites/1 HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+accept: */*
+host: localhost:50336
+connection: Keep-Alive
+user-agent: Apache-HttpClient/4.5.13 (Java/14.0.2)
+accept-encoding: gzip,deflate
+
+
+
+HTTP/1.1 204 No Content
+Keep-Alive: timeout=60
+Connection: keep-alive
+Date: Sun, 27 Dec 2020 04:32:26 GMT
+
+```
+
+
+
+
+
+
 ## 프로그래밍 요구사항
  - ATDD가 존재해야 한다.
 

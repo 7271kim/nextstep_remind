@@ -11,38 +11,38 @@
     <template slot="text">
       <v-form ref="sectionForm" v-model="valid" @submit.prevent>
         <v-select
-          v-model="sectionForm.lineId"
-          :items="lineNameViews"
-          @change="onChangeLine"
-          label="노선 선택"
-          width="400"
-          item-color="amber darken-3"
-          color="grey darken-1"
-          outlined
-          dense
+            v-model="sectionForm.lineId"
+            :items="lineNameViews"
+            @change="onChangeLine"
+            label="노선 선택"
+            width="400"
+            item-color="amber darken-3"
+            color="grey darken-1"
+            outlined
+            dense
         ></v-select>
         <div class="d-flex">
           <v-select
-            v-model="sectionForm.upStationId"
-            class="pr-5"
-            :items="allStationsView"
-            label="상행역"
-            width="400"
-            color="grey darken-1"
-            item-color="amber darken-3"
-            outlined
-            dense
+              v-model="sectionForm.upStationId"
+              class="pr-5"
+              :items="allStationsView"
+              label="상행역"
+              width="400"
+              color="grey darken-1"
+              item-color="amber darken-3"
+              outlined
+              dense
           ></v-select>
           <v-select
-            v-model="sectionForm.downStationId"
-            class="pl-5"
-            :items="allStationsView"
-            label="하행역"
-            width="400"
-            color="grey darken-1"
-            item-color="amber darken-3"
-            outlined
-            dense
+              v-model="sectionForm.downStationId"
+              class="pl-5"
+              :items="allStationsView"
+              label="하행역"
+              width="400"
+              color="grey darken-1"
+              item-color="amber darken-3"
+              outlined
+              dense
           ></v-select>
         </div>
         <div class="d-flex">
