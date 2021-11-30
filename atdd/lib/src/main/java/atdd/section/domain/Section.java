@@ -15,6 +15,7 @@ import atdd.station.domain.Station;
 
 @Entity
 public class Section {
+    public static final Section EMPTY = new Section();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -109,6 +110,10 @@ public class Section {
             throw new DistanceLongException();
         }
         this.distance = distance;
+    }
+
+    public static boolean isEmpty(Section section) {
+        return Objects.isNull(section) || Objects.isNull(section.getId());
     }
 
     @Override

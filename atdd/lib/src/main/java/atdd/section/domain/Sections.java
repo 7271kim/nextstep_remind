@@ -3,9 +3,13 @@ package atdd.section.domain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
+
+import org.springframework.util.CollectionUtils;
 
 import atdd.common.InputException;
 import atdd.section.exception.AlreadyExistUpDownStationException;
@@ -72,35 +76,52 @@ public class Sections {
     }
 
     public void delete(Station station) {
-        validate();
-        Section endSection = findEndSection();
-        if (endSection.isSameDownstation(station)) {
-            list.remove(endSection);
-            return;
-        }
+        validate(station);
+        removeMatchedUpstation(station);
+        removeIfEndSection(station);
+    }
 
-        Section removeSection = list.stream()
+    private void removeIfEndSection(Station station) {
+        list.stream()
+            .filter(section -> section.isSameDownstation(station))
+            .findFirst()
+            .ifPresent(list::remove);
+    }
+
+    private void removeMatchedUpstation(Station station) {
+        list.stream()
             .filter(section -> section.isSameUpstation(station))
             .findFirst()
-            .orElseThrow(InputException::new);
-
-        updateDistance(removeSection);
-        list.remove(removeSection);
+            .ifPresent(this::removeSection);
     }
 
-    private void validate() {
-        if (list == null || list.size() == 1) {
+    private void validate(Station station) {
+
+        if (CollectionUtils.isEmpty(list) || list.size() == 1) {
             throw new MinimumException();
         }
+
+        List<Station> stationList = getStationList();
+
+        if (!stationList.contains(station)) {
+            throw new InputException();
+        }
     }
 
-    private void updateDistance(Section removeSection) {
-        if (isInnerSection(removeSection)) {
-            Section next = findNextSection(removeSection);
-            Section before = findBeforeSection(removeSection);
-            before.updateDistance(next.getDistance() + before.getDistance());
-            before.updateDownstation(removeSection.getDownStatoin());
+    private List<Station> getStationList() {
+        return list.stream()
+            .map(section -> Stream.of(section.getUpstation(), section.getDownStatoin()))
+            .flatMap(Stream::distinct)
+            .collect(Collectors.toList());
+    }
+
+    private void removeSection(Section section) {
+        Section before = findBeforeSection(section);
+        if (!Section.isEmpty(before)) {
+            before.updateDistance(section.getDistance() + before.getDistance());
+            before.updateDownstation(section.getDownStatoin());
         }
+        list.remove(section);
     }
 
     public List<Station> getStations() {
@@ -110,7 +131,7 @@ public class Sections {
         }
         Section nextSection = findStartSection();
         Section endSection = null;
-        while (nextSection != null) {
+        while (!Section.isEmpty(nextSection)) {
             result.add(nextSection.getUpstation());
             endSection = nextSection;
             nextSection = findNextSection(nextSection);
@@ -126,14 +147,14 @@ public class Sections {
         return list.stream()
             .filter(findSection::isBefore)
             .findAny()
-            .orElse(null);
+            .orElse(Section.EMPTY);
     }
 
     private Section findBeforeSection(Section findSection) {
         return list.stream()
             .filter(section -> section.isBefore(findSection))
             .findAny()
-            .orElse(null);
+            .orElse(Section.EMPTY);
     }
 
     private Section findStartSection() {

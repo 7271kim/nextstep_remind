@@ -63,11 +63,20 @@ public class SectionsTest {
 
     @Test
     @DisplayName("중간 역 잘 삭제 되는지 확인")
-    void deleteTest() {
+    void deleteInnerTest() {
         sections.delete(강남역);
         assertThat(sections.getStations().stream()
             .map(Station::getName)
             .collect(Collectors.toList())).containsExactly("삼성역", "교대역", "역삼역");
+    }
+
+    @Test
+    @DisplayName("중간 역 잘 삭제 되는지 확인2")
+    void deleteInnerTwoTest() {
+        sections.delete(교대역);
+        assertThat(sections.getStations().stream()
+            .map(Station::getName)
+            .collect(Collectors.toList())).containsExactly("삼성역", "강남역", "역삼역");
     }
 
     @Test
