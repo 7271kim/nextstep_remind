@@ -72,12 +72,16 @@ public class Section {
         return upstation.equals(compare.upstation) && downStatoin.equals(compare.downStatoin);
     }
 
-    public boolean isMatchedStation(Section compare) {
-        return upstation.equals(compare.upstation) || upstation.equals(compare.getDownStatoin()) || downStatoin.equals(compare.downStatoin) || downStatoin.equals(compare.getUpstation());
-    }
-
     public boolean isSameUpstation(Section compare) {
         return upstation.equals(compare.upstation);
+    }
+
+    public boolean isMatchedUpStation(Section compare) {
+        return upstation.equals(compare.upstation) || upstation.equals(compare.downStatoin);
+    }
+
+    public boolean isMatchedDownStation(Section compare) {
+        return downStatoin.equals(compare.upstation) || downStatoin.equals(compare.downStatoin);
     }
 
     public boolean isSameUpstation(Station station) {

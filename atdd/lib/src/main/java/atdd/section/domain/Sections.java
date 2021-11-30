@@ -28,32 +28,43 @@ public class Sections {
             list.add(section);
             return;
         }
-        checkAlreadyExist(section);
+        validateAlreadyOrNoExist(section);
         updateSection(section);
     }
 
     private void updateSection(Section section) {
-        Section updateSection = list.stream()
-            .filter(section::isMatchedStation)
-            .findFirst().orElseThrow(InputException::new);
-
-        if (section.isSameUpstation(updateSection)) {
-            updateSection.updateUpstation(section.getDownStatoin());
-            updateSection.updateDistance(updateSection.getDistance() - section.getDistance());
-        }
-
-        if (section.isSameDownstation(updateSection)) {
-            updateSection.updateDownstation(section.getUpstation());
-            updateSection.updateDistance(updateSection.getDistance() - section.getDistance());
-        }
-
+        ifMatchedUpstation(section);
+        ifMatchedDonwnStation(section);
         list.add(section);
     }
 
-    private void checkAlreadyExist(Section section) {
-        list.stream().filter(section::isSameSection).findAny().ifPresent(loop -> {
+    private void ifMatchedUpstation(Section section) {
+        list.stream()
+            .filter(section::isSameUpstation)
+            .findFirst().ifPresent(matchedSection -> {
+                matchedSection.updateUpstation(section.getDownStatoin());
+                matchedSection.updateDistance(matchedSection.getDistance() - section.getDistance());
+            });
+    }
+
+    private void ifMatchedDonwnStation(Section section) {
+        list.stream()
+            .filter(section::isSameDownstation)
+            .findFirst().ifPresent(matchedSection -> {
+                matchedSection.updateDownstation(section.getUpstation());
+                matchedSection.updateDistance(matchedSection.getDistance() - section.getDistance());
+            });
+    }
+
+    private void validateAlreadyOrNoExist(Section section) {
+        boolean hasUpstaion = list.stream().anyMatch(section::isMatchedUpStation);
+        boolean hasDownstaion = list.stream().anyMatch(section::isMatchedDownStation);
+        if (hasUpstaion && hasDownstaion) {
             throw new AlreadyExistUpDownStationException();
-        });
+        }
+        if (!hasUpstaion && !hasDownstaion) {
+            throw new InputException();
+        }
     }
 
     public List<Section> getSections() {

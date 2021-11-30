@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import atdd.line.domain.Line;
+import atdd.section.exception.AlreadyExistUpDownStationException;
+import atdd.section.exception.DistanceLongException;
 import atdd.section.exception.MinimumException;
 import atdd.station.domain.Station;
 
@@ -52,6 +54,14 @@ public class SectionsTest {
     }
 
     @Test
+    @DisplayName("기존에 존재하는 역은 추가할 수 없다.")
+    void createAlreadyTest() {
+        assertThrows(AlreadyExistUpDownStationException.class, () -> {
+            sections.add(new Section(5l, 이호선, 삼성역, 역삼역, 1));
+        });
+    }
+
+    @Test
     @DisplayName("중간 역 잘 삭제 되는지 확인")
     void deleteTest() {
         sections.delete(강남역);
@@ -67,6 +77,39 @@ public class SectionsTest {
         assertThat(sections.getStations().stream()
             .map(Station::getName)
             .collect(Collectors.toList())).containsExactly("삼성역", "강남역", "교대역");
+    }
+
+    @Test
+    @DisplayName("끝 역 삭제 후 재삽입 되는지 확인")
+    void deleteEndAddTest() {
+        sections.delete(역삼역);
+        sections.add(new Section(10l, 이호선, 강남역, 역삼역, 1));
+        assertThat(sections.getStations().stream()
+            .map(Station::getName)
+            .collect(Collectors.toList())).containsExactly("삼성역", "강남역", "역삼역", "교대역");
+    }
+
+    @Test
+    @DisplayName("통합 확인")
+    void deleteEndAddBigDistanceTest() {
+        //사당 - 80 - 방배 - 10 - 서초 - 21 - 교대 - 1111 - 강남
+        Line 삼호선 = new Line("레드", "삼호선");
+        sections = new Sections();
+        Station 사당역 = new Station(11l, "사당역");
+        Station 방배역 = new Station(12l, "방배역");
+        Station 서초역 = new Station(13l, "서초역");
+        sections.add(new Section(10l, 삼호선, 사당역, 교대역, 111));
+        sections.add(new Section(11l, 삼호선, 사당역, 방배역, 80));
+        sections.add(new Section(12l, 삼호선, 방배역, 서초역, 10));
+        sections.add(new Section(13l, 삼호선, 교대역, 강남역, 1111));
+
+        sections.delete(강남역);
+        sections.add(new Section(14l, 삼호선, 서초역, 강남역, 20));
+        sections.delete(교대역);
+
+        assertThrows(DistanceLongException.class, () -> {
+            sections.add(new Section(15l, 삼호선, 서초역, 교대역, 22222));
+        });
     }
 
     @Test
