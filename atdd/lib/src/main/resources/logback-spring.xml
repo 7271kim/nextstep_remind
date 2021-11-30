@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <springProfile name="local">
+        <property resource="logback/properties/logback-local.properties"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property resource="logback/properties/logback-prod.properties"/>
+    </springProfile>
+   <springProfile name="test">
+        <property resource="logback/properties/logback-test.properties"/>
+    </springProfile>
+    
+    <property name="LOG_PATH" value="${log.config.path}"/>
+    <property name="LOG_NAME" value="${log.config.filename}"/>
+    <property name="LOG_PATTERN" value="[%d{HH:mm:ss.SSS}] [%thread] %-5level %logger{36} - %msg%n"/>
+    
+    <include resource="logback/appender/console-appender.xml" />
+    <include resource="logback/appender/error-appender.xml" />
+    <include resource="logback/appender/info-appender.xml" />
+    <include resource="logback/appender/json-appender.xml" />
+    <include resource="logback/appender/sql-error-appender.xml" />
+    <include resource="logback/appender/sql-info-appender.xml" />
+    
+    <root level="INFO">
+        <springProfile name="local">
+            <appender-ref ref="LOCAL_CONSOLE_POLICY"/>
+            <appender-ref ref="INFO_DAILY_FILE_POLICY"/>
+            <appender-ref ref="ERROR_FILE_POLICY"/>
+        </springProfile>
+        <springProfile name="prod">
+            <appender-ref ref="INFO_DAILY_FILE_POLICY"/>
+            <appender-ref ref="ERROR_FILE_POLICY"/>
+        </springProfile>
+    </root>
+    
+    <!-- log4jdbc 옵션 설정 --> 
+    <logger name="jdbc" level="OFF"/> 
+    <!-- 커넥션 open close 이벤트를 로그로 남긴다. --> 
+    <logger name="jdbc.connection" level="OFF"/> 
+    <!-- SQL문만을 로그로 남기며, PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문이 보여진다. -->
+    <logger name="jdbc.sqlonly" level="OFF"/> 
+    <!-- SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. --> 
+    <logger name="jdbc.sqltiming" level="DEBUG"/> 
+    <!-- ResultSet을 제외한 모든 JDBC 호출 정보를 로그로 남긴다. 많은 양의 로그가 생성되므로 특별히 JDBC 문제를 추적해야 할 필요가 있는 경우를 제외하고는 사용을 권장하지 않는다. --> 
+    <logger name="jdbc.audit" level="OFF"/> 
+    <!-- ResultSet을 포함한 모든 JDBC 호출 정보를 로그로 남기므로 매우 방대한 양의 로그가 생성된다. --> 
+    <logger name="jdbc.resultset" level="OFF"/>
+    <!-- SQL 결과 조회된 데이터의 table을 로그로 남긴다. --> 
+    <logger name="jdbc.resultsettable" level="OFF"/>
+    
+    <springProfile name="local">
+        <logger name="json" level="INFO" >
+            <appender-ref ref="JSON" />
+        </logger>
+        <logger name="org.springframework.jdbc" level="ERROR" additivity="false">
+            <appender-ref ref="ERROR_SQL_POLICY"/>
+            <appender-ref ref="LOCAL_CONSOLE_POLICY"/>
+        </logger>
+        <logger name="jdbc.sqltiming" level="INFO" additivity="false">
+            <appender-ref ref="INFO_SQL_POLICY"/>
+            <appender-ref ref="LOCAL_CONSOLE_POLICY"/>
+        </logger>
+        <logger name="jdbc.resulttable" level="ERROR" additivity="false">
+             <appender-ref ref="ERROR_SQL_POLICY"/>
+             <appender-ref ref="LOCAL_CONSOLE_POLICY"/>
+        </logger>
+    </springProfile>
+    
+    <springProfile name="prod">
+        <logger name="json">
+            <level value="INFO"/>
+            <appender-ref ref="json" />
+        </logger>
+        <logger name="jdbc.sqltiming" additivity="false">
+            <level value="INFO"/>
+            <appender-ref ref="INFO_SQL_POLICY"/>
+        </logger>
+        <logger name="org.springframework.jdbc" additivity="false">
+            <level value="ERROR"/>
+            <appender-ref ref="ERROR_SQL_POLICY"/>
+        </logger>
+        <logger name="jdbc.sqlonly" additivity="false">
+            <level value="ERROR"/>
+            <appender-ref ref="ERROR_SQL_POLICY"/>
+        </logger>
+    </springProfile>
+    
+</configuration>
