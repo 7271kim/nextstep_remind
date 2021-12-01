@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import atdd.auth.domain.LoginMember;
 import atdd.member.application.MemberService;
+import atdd.member.dto.AdminMemberRequest;
+import atdd.member.dto.AdminMemberResponse;
 import atdd.member.dto.MemberRequest;
 import atdd.member.dto.MemberResponse;
 
@@ -32,18 +34,18 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<List<MemberResponse>> getMembers() {
+    public ResponseEntity<List<AdminMemberResponse>> getMembers() {
         return ResponseEntity.ok().body(memberService.findAll());
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<MemberResponse> findMember(@PathVariable Long id) {
-        MemberResponse member = memberService.findMember(id);
+    public ResponseEntity<AdminMemberResponse> findMember(@PathVariable Long id) {
+        AdminMemberResponse member = memberService.findMember(id);
         return ResponseEntity.ok().body(member);
     }
 
     @PutMapping("/members/{id}")
-    public ResponseEntity<MemberResponse> updateMember(@PathVariable Long id, @RequestBody MemberRequest param) {
+    public ResponseEntity<AdminMemberResponse> updateMember(@PathVariable Long id, @RequestBody AdminMemberRequest param) {
         memberService.updateMember(id, param);
         return ResponseEntity.ok().build();
     }

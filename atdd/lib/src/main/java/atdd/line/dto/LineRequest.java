@@ -28,40 +28,20 @@ public class LineRequest {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Long getUpStationId() {
         return upStationId;
     }
 
-    public void setUpStationId(Long upStationId) {
-        this.upStationId = upStationId;
-    }
-
     public Long getDownStationId() {
         return downStationId;
     }
 
-    public void setDownStationId(Long downStationId) {
-        this.downStationId = downStationId;
-    }
-
     public int getDistance() {
         return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
     }
 
     public static LineRequest of(String color, String name, Long upStation, Long downStation, int distance) {

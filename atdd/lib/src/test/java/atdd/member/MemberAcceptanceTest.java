@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import atdd.AcceptanceTest;
+import atdd.member.dto.AdminMemberRequest;
+import atdd.member.dto.AdminMemberResponse;
 import atdd.member.dto.MemberRequest;
-import atdd.member.dto.MemberResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -46,12 +47,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void getMember() {
         //when
-        MemberResponse response = 회원_정보_조회_요청(id);
+        AdminMemberResponse response = 회원_정보_조회_요청(id);
 
         //then
         assertThat(response.getId()).isEqualTo(id);
         assertThat(response.getEmail()).isEqualTo("7271kim@naver.com");
         assertThat(response.getAge()).isEqualTo(20);
+        assertThat(response.getActiveType()).isEqualTo(1);
+        assertThat(response.getUserType()).isEqualTo(0);
     }
 
     @DisplayName("회원 목록 조회")
@@ -61,14 +64,14 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         회원_생성_요청("7271kim@naver.com2", "1234", 40);
 
         //when
-        List<MemberResponse> response = RestAssured.given().log().all()
+        List<AdminMemberResponse> response = RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .get("/members")
             .then().log().all()
             .extract()
             .jsonPath()
-            .getList(".", MemberResponse.class);
+            .getList(".", AdminMemberResponse.class);
 
         //then
         assertThat(response.size()).isEqualTo(2);
@@ -79,7 +82,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void modifyMember() {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(new MemberRequest("aaa", "aaa", 30))
+            .body(new AdminMemberRequest("aaa", "aaa", 30, 1, 1))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .put("/members/" + id)
@@ -88,9 +91,11 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        MemberResponse 신규 = 회원_정보_조회_요청(id);
+        AdminMemberResponse 신규 = 회원_정보_조회_요청(id);
         assertThat(신규.getEmail()).isEqualTo("aaa");
         assertThat(신규.getAge()).isEqualTo(30);
+        assertThat(신규.getActiveType()).isEqualTo(1);
+        assertThat(신규.getUserType()).isEqualTo(1);
 
     }
 
@@ -143,7 +148,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
             .extract();
     }
 
-    public static MemberResponse 회원_정보_조회_요청(Long id) {
+    public static AdminMemberResponse 회원_정보_조회_요청(Long id) {
         return RestAssured
             .given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +156,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
             .then().log().all()
             .extract()
             .jsonPath()
-            .getObject(".", MemberResponse.class);
+            .getObject(".", AdminMemberResponse.class);
     }
 
 }

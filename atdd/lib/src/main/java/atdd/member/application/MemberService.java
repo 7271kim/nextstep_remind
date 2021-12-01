@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import atdd.common.InputException;
 import atdd.member.domain.Member;
 import atdd.member.domain.MemberRepository;
+import atdd.member.dto.AdminMemberRequest;
+import atdd.member.dto.AdminMemberResponse;
 import atdd.member.dto.MemberRequest;
 import atdd.member.dto.MemberResponse;
 
@@ -26,9 +28,14 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
-    public MemberResponse findMember(Long id) {
+    public AdminMemberResponse findMember(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
-        return MemberResponse.of(member);
+        return AdminMemberResponse.of(member);
+    }
+
+    public void updateMember(Long id, AdminMemberRequest param) {
+        Member member = memberRepository.findById(id).orElseThrow(InputException::new);
+        member.update(param.toMember());
     }
 
     public void updateMember(Long id, MemberRequest param) {
@@ -41,8 +48,8 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public List<MemberResponse> findAll() {
+    public List<AdminMemberResponse> findAll() {
         return memberRepository.findAll().stream()
-            .map(MemberResponse::of).collect(Collectors.toList());
+            .map(AdminMemberResponse::of).collect(Collectors.toList());
     }
 }

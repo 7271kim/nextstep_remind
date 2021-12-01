@@ -314,7 +314,9 @@ authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpY
 {
     "email": "7271kim@naver.com",
     "password" : "test",
-    "age" : 20
+    "age" : 20,
+    "activeType" : 1,
+    "userType" : 1
 }
 
 HTTP/1.1 200 
