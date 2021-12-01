@@ -3,7 +3,6 @@ package atdd.auth.application;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import atdd.auth.domain.LoginMember;
 import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
 import atdd.auth.exception.AuthorizationException;
@@ -33,13 +32,22 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
-    public LoginMember findMemberByToken(String credentials) {
+    public Member findMemberByToken(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
-            return new LoginMember();
+            return Member.EMTPY;
         }
 
         String email = jwtTokenProvider.getPayload(credentials);
-        Member member = memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
-        return new LoginMember(member.getId(), member.getEmail(), member.getAge());
+        return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
     }
+
+    public Member findMemberByTokenOrElseGuest(String credentials) {
+        if (!jwtTokenProvider.validateToken(credentials)) {
+            throw new AuthorizationException();
+        }
+
+        String email = jwtTokenProvider.getPayload(credentials);
+        return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+    }
+
 }

@@ -13,6 +13,8 @@ import atdd.member.constant.UserType;
 
 @Entity
 public class Member extends BaseEntity {
+    public static final Member EMTPY = new Member();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
