@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 public class AuthorizationException extends RuntimeException {
-    public AuthorizationException() {}
+    public static final String MESSAGE = "비밀번호를 확인하세요";
+    private static final long serialVersionUID = 1L;
 
-    public AuthorizationException(String message) {
-        super(message);
+    public AuthorizationException() {
+        super(MESSAGE);
     }
+
 }

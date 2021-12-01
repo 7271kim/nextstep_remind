@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import atdd.AcceptanceTest;
 import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
+import atdd.auth.exception.AuthorizationException;
+import atdd.common.ErrorResponse;
 import atdd.member.MemberAcceptanceTest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -40,13 +42,22 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     }
 
-    /*@DisplayName("Bearer Auth 로그인 실패 - 비밀번호가 맞지 않음")
+    @DisplayName("Bearer Auth 로그인 실패 - 비밀번호가 맞지 않음")
     @Test
-    void myInfoWithBadBearerAuth() {}
+    void myInfoWithBadBearerAuth() {
+        ExtractableResponse<Response> response = 계정_로그인("7271kim@naver.com", "123224");
+
+        //then
+        ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+        assertThat(errorResponse.getMessage()).isEqualTo(AuthorizationException.MESSAGE);
+    }
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
-    void myInfoWithWrongBearerAuth() {}*/
+    void myInfoWithWrongBearerAuth() {
+
+    }
 
     public static ExtractableResponse<Response> 계정_로그인(String email, String password) {
         return RestAssured

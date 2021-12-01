@@ -17,4 +17,9 @@ public class ControllerAdvice {
         ErrorResponse errResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message);
         return ResponseEntity.badRequest().body(errResponse);
     }
+
+    public ResponseEntity<ErrorResponse> getBadResponse(String message, HttpStatus httpStatus) {
+        ErrorResponse errResponse = new ErrorResponse(httpStatus.value(), message);
+        return ResponseEntity.status(httpStatus).body(errResponse);
+    }
 }
