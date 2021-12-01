@@ -40,13 +40,13 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     }
 
-    @DisplayName("Bearer Auth 로그인 실패 - 비밀번호가 맞지 않음")
+    /*@DisplayName("Bearer Auth 로그인 실패 - 비밀번호가 맞지 않음")
     @Test
     void myInfoWithBadBearerAuth() {}
 
     @DisplayName("Bearer Auth 유효하지 않은 토큰")
     @Test
-    void myInfoWithWrongBearerAuth() {}
+    void myInfoWithWrongBearerAuth() {}*/
 
     public static ExtractableResponse<Response> 계정_로그인(String email, String password) {
         return RestAssured

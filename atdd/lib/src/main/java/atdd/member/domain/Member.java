@@ -7,9 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.apache.commons.lang3.StringUtils;
-
-import atdd.auth.exception.AuthorizationException;
 import atdd.common.BaseEntity;
 import atdd.member.constant.ActiveType;
 import atdd.member.constant.UserType;
@@ -76,12 +73,6 @@ public class Member extends BaseEntity {
         this.age = member.age;
         this.userType = member.userType;
         this.activeType = member.activeType;
-    }
-
-    public void checkPassword(String password) {
-        if (!StringUtils.equals(this.password, password)) {
-            throw new AuthorizationException();
-        }
     }
 
     public void update(String email, int age) {
