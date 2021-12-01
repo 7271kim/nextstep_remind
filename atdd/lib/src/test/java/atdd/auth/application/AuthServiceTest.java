@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
@@ -30,16 +31,19 @@ public class AuthServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private JwtTokenProvider jwtTokenProvider;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(memberRepository, jwtTokenProvider);
+        authService = new AuthService(memberRepository, jwtTokenProvider, passwordEncoder);
     }
 
     @Test
     void login() {
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.of(new Member(EMAIL, PASSWORD, AGE)));
         when(jwtTokenProvider.createToken(anyString())).thenReturn("TOKEN");
+        when(passwordEncoder.encode(anyString())).thenReturn(PASSWORD);
 
         TokenResponse token = authService.login(new TokenRequest(EMAIL, PASSWORD));
 

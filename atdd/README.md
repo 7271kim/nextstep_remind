@@ -464,7 +464,7 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
 }
 ```
 
-### 토큰 발급 request / response
+### 토큰 발급(로그인) request / response
 ```
 POST /login/token HTTP/1.1
 content-type: application/json; charset=UTF-8

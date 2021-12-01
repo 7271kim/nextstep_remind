@@ -27,6 +27,10 @@ public class MemberRequest {
         return age;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Member toMember() {
         return new Member(email, password, age);
     }

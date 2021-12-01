@@ -3,6 +3,7 @@ package atdd.member.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +19,15 @@ import atdd.member.dto.MemberResponse;
 @Transactional
 public class MemberService {
     private MemberRepository memberRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public MemberResponse createMember(MemberRequest request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         Member member = memberRepository.save(request.toMember());
         return MemberResponse.of(member);
     }
