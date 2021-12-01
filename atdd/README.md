@@ -237,6 +237,188 @@ HTTP/1.1 204
 Date: Fri, 13 Nov 2020 00:11:51 GMT
 ```
 
+### 회원 가입 request / response
+```
+POST /members HTTP/1.1
+accept: */*
+content-type: application/json; charset=UTF-8
+
+{
+    "email": "7271kim@naver.com",
+    "password" : "test",
+    "age" : 20
+}
+
+HTTP/1.1 201 
+Location: /members/1
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
+
+### 회원 목록 조회 request / response
+```
+GET /members HTTP/1.1
+accept: application/json
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+HTTP/1.1 200 
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+
+[
+    {
+        "id": 1,
+        "email" : "7271kim@naver.com",
+        "age" : 20
+    },
+    {
+        "id": 2,
+        "email" : "7272kim@naver.com",
+        "age" : 21
+    }
+]
+```
+
+### 회원 조회 request / response
+```
+GET /members/1 HTTP/1.1
+accept: application/json
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+HTTP/1.1 200 
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+
+{
+    "id": 1,
+    "email" : "7271kim@naver.com",
+    "age" : 20
+}
+
+```
+
+### 회원 업데이트 request / response
+```
+PUT /members/1 HTTP/1.1
+accept: */*
+content-type: application/json; charset=UTF-8
+content-length: 45
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+{
+    "email": "7271kim@naver.com",
+    "password" : "test",
+    "age" : 20
+}
+
+HTTP/1.1 200 
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
+
+### 회원 삭제 request / response
+```
+DELETE /members/1 HTTP/1.1
+accept: */*
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+HTTP/1.1 204 
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
+
+### 내 정보 확인 request / response
+```
+GET /members/me HTTP/1.1
+accept: application/json
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+HTTP/1.1 200 
+Content-Type: application/json
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+
+{
+    "id": 1,
+    "email" : "7271kim@naver.com",
+    "age" : 20
+}
+```
+
+### 내 정보 업데이트 request / response
+```
+PUT /members/me HTTP/1.1
+accept: */*
+content-type: application/json; charset=UTF-8
+content-length: 45
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+{
+    "email": "7271kim@naver.com",
+    "password" : "test",
+    "age" : 20
+}
+
+HTTP/1.1 200 
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
+
+### 내 계정 삭제 request / response
+```
+DELETE /members/me HTTP/1.1
+accept: */*
+host: localhost:49468
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+
+
+HTTP/1.1 204 
+Date: Fri, 13 Nov 2020 00:11:51 GMT
+```
+
+### 즐겨찾기 목록 조회 request / response
+```
+GET /favorites HTTP/1.1
+authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
+accept: application/json
+host: localhost:50336
+connection: Keep-Alive
+user-agent: Apache-HttpClient/4.5.13 (Java/14.0.2)
+accept-encoding: gzip,deflate
+
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Sun, 27 Dec 2020 04:32:26 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+    {
+        "id": 1,
+        "source": {
+            "id": 1,
+            "name": "강남역",
+            "createdDate": "2020-12-27T13:32:26.364439",
+            "modifiedDate": "2020-12-27T13:32:26.364439"
+        },
+        "target": {
+            "id": 3,
+            "name": "정자역",
+            "createdDate": "2020-12-27T13:32:26.486256",
+            "modifiedDate": "2020-12-27T13:32:26.486256"
+        }
+    }
+]
+```
+
 ### 경로 조회 request / response
 ```
 GET /paths?source=1&target=6 HTTP/1.1
