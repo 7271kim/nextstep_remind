@@ -26,10 +26,24 @@ npm run dev
 ./gradlew bootRun
 ```
 
-## 기능 요구사항
- - 지하철 역 : 생성 / 목록 조회 / 삭제 API 개발
+## 기능 요구사항 ( API 개발 )
+ - 지하철 역 : 생성 / 목록 조회 / 삭제
  - 지하철 노선 : 생성 / 목록 조회 / 조회 / 수정 / 삭제 
  - 지하철 구간 : 등록 / 삭제 API 개발
+ - 회원 : 가입 / 목록조회 / 회원 조회 / 업데이트 / 삭제 ( admin계정만 가능하다 )
+ - 내 정보 : 조회 / 업데이트 / 삭제 ( 로그인 계정만 가능하다 )
+ - 즐겨찾기 : 생성 / 목록 조회 / 삭제 
+ - 경로 검색
+
+<p align="center">
+    <img width="400px;" src="images/요금조회.png" alt="요금조회"> <img width="400px;" src="images/로그인.png" alt="로그인">
+</p>
+<p align="center">
+    <img width="800px;" src="images/내정보.png" alt="내정보">
+</p>
+<p align="center">
+    <img width="800px;" src="images/즐겨찾기.png" alt="즐겨찾기">
+</p>
 
 ### 지하철 역 생성 request / response
 ```
@@ -383,42 +397,6 @@ authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpY
 
 HTTP/1.1 204 
 Date: Fri, 13 Nov 2020 00:11:51 GMT
-```
-
-### 즐겨찾기 목록 조회 request / response
-```
-GET /favorites HTTP/1.1
-authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpYXQiOjE2MDkwNDM1NDYsImV4cCI6MTYwOTA0NzE0Nn0.dwBfYOzG_4MXj48Zn5Nmc3FjB0OuVYyNzGqFLu52syY
-accept: application/json
-host: localhost:50336
-connection: Keep-Alive
-user-agent: Apache-HttpClient/4.5.13 (Java/14.0.2)
-accept-encoding: gzip,deflate
-
-HTTP/1.1 200 
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Sun, 27 Dec 2020 04:32:26 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-
-[
-    {
-        "id": 1,
-        "source": {
-            "id": 1,
-            "name": "강남역",
-            "createdDate": "2020-12-27T13:32:26.364439",
-            "modifiedDate": "2020-12-27T13:32:26.364439"
-        },
-        "target": {
-            "id": 3,
-            "name": "정자역",
-            "createdDate": "2020-12-27T13:32:26.486256",
-            "modifiedDate": "2020-12-27T13:32:26.486256"
-        }
-    }
-]
 ```
 
 ### 경로 조회 request / response
