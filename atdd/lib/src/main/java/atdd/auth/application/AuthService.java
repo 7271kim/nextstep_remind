@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 
 import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
+import atdd.auth.exception.AdminUserException;
 import atdd.auth.exception.AuthorizationException;
+import atdd.auth.exception.UserException;
 import atdd.auth.infrastructure.JwtTokenProvider;
 import atdd.member.constant.UserType;
 import atdd.member.domain.Member;
@@ -39,7 +41,7 @@ public class AuthService {
         }
 
         String email = jwtTokenProvider.getPayload(credentials);
-        return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+        return memberRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
     public Member findMemberByTokenOrElseGuest(String credentials) {
@@ -48,7 +50,7 @@ public class AuthService {
         }
 
         String email = jwtTokenProvider.getPayload(credentials);
-        return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+        return memberRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
     public Member findMemberByTokenAndAdmin(String credentials) {
@@ -57,7 +59,7 @@ public class AuthService {
         }
 
         String email = jwtTokenProvider.getPayload(credentials);
-        return memberRepository.findByEmailAndUserType(email, UserType.ADMIN).orElseThrow(RuntimeException::new);
+        return memberRepository.findByEmailAndUserType(email, UserType.ADMIN).orElseThrow(AdminUserException::new);
     }
 
 }

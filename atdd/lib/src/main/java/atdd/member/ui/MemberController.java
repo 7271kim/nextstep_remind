@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import atdd.auth.domain.AdminAuthenticationPrincipal;
 import atdd.member.application.MemberService;
 import atdd.member.domain.Member;
 import atdd.member.dto.AdminMemberRequest;
@@ -40,24 +41,24 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<List<AdminMemberResponse>> getMembers() {
+    public ResponseEntity<List<AdminMemberResponse>> getMembers(@AdminAuthenticationPrincipal Member loginMember) {
         return ResponseEntity.ok().body(memberService.findAll());
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<AdminMemberResponse> findMember(@PathVariable Long id) {
+    public ResponseEntity<AdminMemberResponse> findMember(@PathVariable Long id, @AdminAuthenticationPrincipal Member loginMember) {
         AdminMemberResponse member = memberService.findMember(id);
         return ResponseEntity.ok().body(member);
     }
 
     @PutMapping("/members/{id}")
-    public ResponseEntity<AdminMemberResponse> updateMember(@PathVariable Long id, @RequestBody AdminMemberRequest param) {
+    public ResponseEntity<AdminMemberResponse> updateMember(@PathVariable Long id, @RequestBody AdminMemberRequest param, @AdminAuthenticationPrincipal Member loginMember) {
         memberService.updateMember(id, param);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/members/{id}")
-    public ResponseEntity<MemberResponse> deleteMember(@PathVariable Long id) {
+    public ResponseEntity<MemberResponse> deleteMember(@PathVariable Long id, @AdminAuthenticationPrincipal Member loginMember) {
         memberService.deleteMember(id);
         return ResponseEntity.noContent().build();
     }

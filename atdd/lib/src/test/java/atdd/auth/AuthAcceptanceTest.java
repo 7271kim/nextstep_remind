@@ -33,7 +33,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @Test
     void myInfoWithBearerAuth() {
         //when
-        ExtractableResponse<Response> response = 계정_로그인("7271kim@naver.com", "1234");
+        ExtractableResponse<Response> response = 계정_로그인_응답("7271kim@naver.com", "1234");
 
         //then
         TokenResponse token = response.jsonPath().getObject(".", TokenResponse.class);
@@ -45,7 +45,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     @DisplayName("Bearer Auth 로그인 실패 - 비밀번호가 맞지 않음")
     @Test
     void myInfoWithBadBearerAuth() {
-        ExtractableResponse<Response> response = 계정_로그인("7271kim@naver.com", "123224");
+        ExtractableResponse<Response> response = 계정_로그인_응답("7271kim@naver.com", "123224");
 
         //then
         ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
@@ -59,7 +59,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     }
 
-    public static ExtractableResponse<Response> 계정_로그인(String email, String password) {
+    private static ExtractableResponse<Response> 계정_로그인_응답(String email, String password) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,5 +67,17 @@ public class AuthAcceptanceTest extends AcceptanceTest {
             .when().post("/login/token")
             .then().log().all()
             .extract();
+    }
+
+    public static TokenResponse 계정_로그인(String email, String password) {
+        return RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(new TokenRequest(email, password))
+            .when().post("/login/token")
+            .then().log().all()
+            .extract()
+            .jsonPath()
+            .getObject(".", TokenResponse.class);
     }
 }
