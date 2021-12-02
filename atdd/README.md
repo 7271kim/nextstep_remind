@@ -116,7 +116,8 @@ content-type: application/json; charset=UTF-8
     "name": "신분당선",
     "upStationId": "1",
     "downStationId": "2",
-    "distance": "10"
+    "distance": "10",
+    "extraFee" : 1000
 }
 
 HTTP/1.1 201 
@@ -128,6 +129,7 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
     "id": 1,
     "name": "신분당선",
     "color": "bg-red-600",
+    "extraFee" : 1000,
     "createdDate": "2020-11-13T09:11:51.997",
     "modifiedDate": "2020-11-13T09:11:51.997"
 }
@@ -148,6 +150,7 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
         "id": 1,
         "name": "신분당선",
         "color": "bg-red-600",
+        "extraFee" : 1000,
         "stations": [
             
         ],
@@ -181,6 +184,7 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
     "id": 1,
     "name": "신분당선",
     "color": "bg-red-600",
+    "extraFee" : 1000,
     "stations": [
         {
             "id": 1,
@@ -209,7 +213,8 @@ host: localhost:49468
 
 {
     "color": "bg-blue-600",
-    "name": "구분당선"
+    "name": "구분당선",
+    "extraFee" : 1000
 }
 
 HTTP/1.1 200 
@@ -438,7 +443,8 @@ Date: Fri, 13 Nov 2020 00:11:51 GMT
             "createdAt": "2020-05-09T23:54:11.893"
         }
     ],
-    "distance": 40
+    "distance": 40,
+    "fare": 3000
 }
 ```
 

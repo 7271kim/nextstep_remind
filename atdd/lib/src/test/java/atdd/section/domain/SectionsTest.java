@@ -30,7 +30,7 @@ public class SectionsTest {
     @BeforeEach
     void setUp() {
         // 삼성 - 강남 - 교대 - 역삼
-        이호선 = new Line("초록", "이호선");
+        이호선 = new Line("초록", "이호선", 1000);
         강남역 = new Station(1l, "강남역");
         교대역 = new Station(2l, "교대역");
         역삼역 = new Station(3l, "역삼역");
@@ -102,7 +102,7 @@ public class SectionsTest {
     @DisplayName("통합 확인")
     void deleteEndAddBigDistanceTest() {
         //사당 - 80 - 방배 - 10 - 서초 - 21 - 교대 - 1111 - 강남
-        Line 삼호선 = new Line("레드", "삼호선");
+        Line 삼호선 = new Line("레드", "삼호선", 2000);
         sections = new Sections();
         Station 사당역 = new Station(11l, "사당역");
         Station 방배역 = new Station(12l, "방배역");

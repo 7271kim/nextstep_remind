@@ -75,7 +75,7 @@ public class LineService {
 
     public void updateLine(Long lineId, LineRequest request) {
         Line line = lineRepository.findById(lineId).orElseThrow(InputException::new);
-        line.update(request.getColor(), request.getName());
+        line.update(request.toLine());
     }
 
     public void deleteLine(Long lineId) {

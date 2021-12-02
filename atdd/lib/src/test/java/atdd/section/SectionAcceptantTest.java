@@ -43,7 +43,7 @@ public class SectionAcceptantTest extends AcceptanceTest {
         서초역 = StationAcceptantTest.지하철역_생성요청("서초역");
         역삼역 = StationAcceptantTest.지하철역_생성요청("역삼역");
 
-        이호선 = LineAcceptantTest.지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100);
+        이호선 = LineAcceptantTest.지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100, 2000);
     }
 
     @Test

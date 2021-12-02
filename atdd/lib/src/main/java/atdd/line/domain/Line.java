@@ -32,11 +32,14 @@ public class Line extends BaseEntity {
 
     private String color;
 
+    private int extraFee;
+
     public Line() {}
 
-    public Line(String color, String name) {
+    public Line(String color, String name, int extraFee) {
         this.color = color;
         this.name = name;
+        this.extraFee = extraFee;
     }
 
     public Long getId() {
@@ -63,9 +66,14 @@ public class Line extends BaseEntity {
         return Collections.unmodifiableList(sections.getStations());
     }
 
-    public void update(String color, String name) {
-        this.color = color;
-        this.name = name;
+    public int getExtraFee() {
+        return extraFee;
+    }
+
+    public void update(Line line) {
+        this.color = line.getColor();
+        this.name = line.getName();
+        this.extraFee = line.getExtraFee();
     }
 
 }

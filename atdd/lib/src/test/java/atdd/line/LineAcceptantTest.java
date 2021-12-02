@@ -40,7 +40,7 @@ public class LineAcceptantTest extends AcceptanceTest {
         강남역 = StationAcceptantTest.지하철역_생성요청("강남역");
         교대역 = StationAcceptantTest.지하철역_생성요청("교대역");
         역삼역 = StationAcceptantTest.지하철역_생성요청("역삼역");
-        이호선 = 지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100);
+        이호선 = 지하철_노선_생성요청("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100, 1000);
         SectionAcceptantTest.지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 10, 이호선.getId());
     }
 
@@ -49,7 +49,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     void createTest() {
         //when
         ExtractableResponse<Response> response = 지하철_노선_생성요청(
-            new LineRequest("bg-red-600", "신분당선", 강남역.getId(), 교대역.getId(), 100));
+            new LineRequest("bg-red-600", "신분당선", 강남역.getId(), 교대역.getId(), 100, 2000));
 
         //then
         LineResponse line = response.jsonPath().getObject(".", LineResponse.class);
@@ -60,6 +60,7 @@ public class LineAcceptantTest extends AcceptanceTest {
         assertThat(line.getColor()).isEqualTo("bg-red-600");
         assertThat(line.getCreatedDate()).isNotNull();
         assertThat(line.getModifiedDate()).isNotNull();
+        assertThat(line.getExtraFee()).isEqualTo(2000);
 
     }
 
@@ -80,7 +81,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     void alreayExsistTest() {
         //when
         ExtractableResponse<Response> response = 지하철_노선_생성요청(
-            new LineRequest("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100));
+            new LineRequest("bg-red-600", "2호선", 강남역.getId(), 교대역.getId(), 100, 1000));
 
         //then
         ErrorResponse errorResponse = response.jsonPath().getObject(".", ErrorResponse.class);
@@ -92,7 +93,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     @DisplayName("지하철 노선 목록 조회 테스트")
     void showListTest() {
         //given
-        지하철_노선_생성요청("블루", "신분당선", 역삼역.getId(), 강남역.getId(), 100);
+        지하철_노선_생성요청("블루", "신분당선", 역삼역.getId(), 강남역.getId(), 100, 2000);
 
         //when
         List<LineResponse> response = RestAssured.given().log().all()
@@ -112,8 +113,10 @@ public class LineAcceptantTest extends AcceptanceTest {
         assertThat(이호선_응답.getId()).isEqualTo(이호선.getId());
         assertThat(이호선_응답.getName()).isEqualTo(이호선.getName());
         assertThat(이호선_응답.getColor()).isEqualTo(이호선.getColor());
+        assertThat(이호선_응답.getExtraFee()).isEqualTo(이호선.getExtraFee());
         assertThat(신분당선_응답.getName()).isEqualTo(신분당선_응답.getName());
         assertThat(신분당선_응답.getColor()).isEqualTo(신분당선_응답.getColor());
+        assertThat(신분당선_응답.getExtraFee()).isEqualTo(신분당선_응답.getExtraFee());
     }
 
     @Test
@@ -134,7 +137,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     void modifyTest() {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(LineRequest.of("bg-blue-600", "구분당선"))
+            .body(LineRequest.of("bg-blue-600", "구분당선", 3000))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .put("/lines/" + 이호선.getId())
@@ -146,6 +149,7 @@ public class LineAcceptantTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(line.getColor()).isEqualTo("bg-blue-600");
         assertThat(line.getName()).isEqualTo("구분당선");
+        assertThat(line.getExtraFee()).isEqualTo(3000);
     }
 
     @Test
@@ -153,7 +157,7 @@ public class LineAcceptantTest extends AcceptanceTest {
     void emptyLineModifyErrorTest() {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-            .body(LineRequest.of("bg-blue-600", "구분당선"))
+            .body(LineRequest.of("bg-blue-600", "구분당선", 3000))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .put("/lines/7")
@@ -216,9 +220,9 @@ public class LineAcceptantTest extends AcceptanceTest {
             .extract();
     }
 
-    public static LineResponse 지하철_노선_생성요청(String color, String name, Long upStation, Long downStation, int distance) {
+    public static LineResponse 지하철_노선_생성요청(String color, String name, Long upStation, Long downStation, int distance, int extraFee) {
         return RestAssured.given().log().all()
-            .body(LineRequest.of(color, name, upStation, downStation, distance))
+            .body(LineRequest.of(color, name, upStation, downStation, distance, extraFee))
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .post("/lines")
