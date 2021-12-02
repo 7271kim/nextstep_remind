@@ -55,8 +55,8 @@
         </div>
         <div class="d-flex">
           <v-text-field
-              v-model="lineForm.addFare"
-              :rules="rules.section.addFare"
+              v-model="lineForm.extraFee"
+              :rules="rules.section.extraFee"
               color="grey darken-1"
               label="추가요금"
               placeholder="추가요금"
@@ -124,7 +124,7 @@ export default {
           upStationId: '',
           downStationId: '',
           distance: '',
-          addFare:''
+          extraFee:''
         }
         this.$refs.lineForm.resetValidation()
         this.closeDialog()
@@ -160,7 +160,7 @@ export default {
         upStationId: '',
         downStationId: '',
         distance: '',
-        addFare:''
+        extraFee:''
       },
       valid: false,
       lineColors: [...LINE_COLORS],

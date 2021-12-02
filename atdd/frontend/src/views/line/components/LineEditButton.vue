@@ -19,8 +19,8 @@
           outlined
         ></v-text-field>
         <v-text-field
-          v-model="lineEditForm.addFare"
-          :rules="rules.line.addFare"
+          v-model="lineEditForm.extraFee"
+          :rules="rules.line.extraFee"
           color="grey darken-1"
           label="추가 요금"
           placeholder="추가 요금"

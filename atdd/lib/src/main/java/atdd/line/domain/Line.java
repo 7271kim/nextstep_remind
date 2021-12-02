@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import atdd.common.BaseEntity;
 import atdd.section.domain.Section;
 import atdd.section.domain.Sections;
@@ -32,6 +34,7 @@ public class Line extends BaseEntity {
 
     private String color;
 
+    @ColumnDefault("0")
     private int extraFee;
 
     public Line() {}
