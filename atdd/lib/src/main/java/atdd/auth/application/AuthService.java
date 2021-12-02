@@ -7,6 +7,7 @@ import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
 import atdd.auth.exception.AuthorizationException;
 import atdd.auth.infrastructure.JwtTokenProvider;
+import atdd.member.constant.UserType;
 import atdd.member.domain.Member;
 import atdd.member.domain.MemberRepository;
 
@@ -48,6 +49,15 @@ public class AuthService {
 
         String email = jwtTokenProvider.getPayload(credentials);
         return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+    }
+
+    public Member findMemberByTokenAndAdmin(String credentials) {
+        if (!jwtTokenProvider.validateToken(credentials)) {
+            throw new AuthorizationException();
+        }
+
+        String email = jwtTokenProvider.getPayload(credentials);
+        return memberRepository.findByEmailAndUserType(email, UserType.ADMIN).orElseThrow(RuntimeException::new);
     }
 
 }

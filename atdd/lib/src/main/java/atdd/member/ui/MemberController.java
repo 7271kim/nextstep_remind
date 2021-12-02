@@ -33,6 +33,12 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/members/" + member.getId())).build();
     }
 
+    @PostMapping("/members/admin")
+    public ResponseEntity createAdminMember(@RequestBody MemberRequest request) {
+        MemberResponse member = memberService.createAdminMember(request);
+        return ResponseEntity.created(URI.create("/members/" + member.getId())).build();
+    }
+
     @GetMapping("/members")
     public ResponseEntity<List<AdminMemberResponse>> getMembers() {
         return ResponseEntity.ok().body(memberService.findAll());

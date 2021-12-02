@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import atdd.common.InputException;
+import atdd.member.constant.ActiveType;
+import atdd.member.constant.UserType;
 import atdd.member.domain.Member;
 import atdd.member.domain.MemberRepository;
 import atdd.member.dto.AdminMemberRequest;
@@ -55,5 +57,11 @@ public class MemberService {
     public List<AdminMemberResponse> findAll() {
         return memberRepository.findAll().stream()
             .map(AdminMemberResponse::of).collect(Collectors.toList());
+    }
+
+    public MemberResponse createAdminMember(MemberRequest request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        Member member = memberRepository.save(new Member("rootAdmin", request.getPassword(), request.getAge(), UserType.ADMIN.getCode(), ActiveType.ACTIVE.getCode()));
+        return MemberResponse.of(member);
     }
 }

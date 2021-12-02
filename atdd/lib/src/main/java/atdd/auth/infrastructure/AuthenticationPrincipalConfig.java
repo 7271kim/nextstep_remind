@@ -7,8 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import atdd.auth.application.AuthService;
-import atdd.auth.ui.AuthenticationPrincipalArgumentResolver;
-import atdd.auth.ui.NonAuthenticationPrincipalArgumentResolver;
+import atdd.auth.ui.AuthResolver;
 
 @Configuration
 public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
@@ -20,17 +19,11 @@ public class AuthenticationPrincipalConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List argumentResolvers) {
-        argumentResolvers.add(createAuthenticationPrincipalArgumentResolver());
-        argumentResolvers.add(createNonAuthenticationPrincipalArgumentResolver());
+        argumentResolvers.add(authResolver());
     }
 
     @Bean
-    public AuthenticationPrincipalArgumentResolver createAuthenticationPrincipalArgumentResolver() {
-        return new AuthenticationPrincipalArgumentResolver(authService);
-    }
-
-    @Bean
-    public NonAuthenticationPrincipalArgumentResolver createNonAuthenticationPrincipalArgumentResolver() {
-        return new NonAuthenticationPrincipalArgumentResolver(authService);
+    public AuthResolver authResolver() {
+        return new AuthResolver(authService);
     }
 }
