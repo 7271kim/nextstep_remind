@@ -36,7 +36,7 @@ npm run dev
  - 경로 검색
 
 <p align="center">
-    <img width="400px;" src="images/요금조회.png" alt="요금조회"> <img width="400px;" src="images/로그인.png" alt="로그인">
+    <img width="300px;" src="images/노선관리.png" alt="노선괸리"> <img width="300px;" src="images/요금조회.png" alt="요금조회"> <img width="300px;" src="images/로그인.png" alt="로그인">
 </p>
 <p align="center">
     <img width="800px;" src="images/내정보.png" alt="내정보">
