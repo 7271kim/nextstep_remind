@@ -39,10 +39,23 @@ public class Line extends BaseEntity {
 
     public Line() {}
 
+    public Line(Long id, String name, String color, Sections sections, int extraFee) {
+        this.id = id;
+        this.name = name;
+        this.sections = sections;
+        this.color = color;
+        this.extraFee = extraFee;
+    }
+
     public Line(String color, String name, int extraFee) {
         this.color = color;
         this.name = name;
         this.extraFee = extraFee;
+    }
+
+    public Line(Long id, String color, String name, Station upStation, Station downSation, int distance, int extraFee) {
+        this(color, name, extraFee);
+        sections.add(new Section(this, upStation, upStation, distance));
     }
 
     public Long getId() {
@@ -67,6 +80,10 @@ public class Line extends BaseEntity {
 
     public List<Station> getStations() {
         return Collections.unmodifiableList(sections.getStations());
+    }
+
+    public List<Section> getSections() {
+        return Collections.unmodifiableList(sections.getSections());
     }
 
     public int getExtraFee() {

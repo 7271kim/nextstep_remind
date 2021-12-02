@@ -45,6 +45,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
     
+    //최단거리 라이브러리
+    implementation 'org.jgrapht:jgrapht-core:1.0.1'
+    
 }
 
 test {
