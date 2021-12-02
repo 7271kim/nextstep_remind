@@ -46,6 +46,7 @@ public class MemberService {
 
     public void updateMember(Long id, MemberRequest param) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
+        param.setPassword(passwordEncoder.encode(param.getPassword()));
         member.update(param.toMember());
     }
 

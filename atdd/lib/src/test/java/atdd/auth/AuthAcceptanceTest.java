@@ -59,7 +59,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
     }
 
-    private static ExtractableResponse<Response> 계정_로그인_응답(String email, String password) {
+    public static ExtractableResponse<Response> 계정_로그인_응답(String email, String password) {
         return RestAssured
             .given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -70,13 +70,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     }
 
     public static TokenResponse 계정_로그인(String email, String password) {
-        return RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(new TokenRequest(email, password))
-            .when().post("/login/token")
-            .then().log().all()
-            .extract()
+        return 계정_로그인_응답(email, password)
             .jsonPath()
             .getObject(".", TokenResponse.class);
     }

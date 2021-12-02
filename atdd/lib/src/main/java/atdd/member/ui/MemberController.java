@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import atdd.auth.domain.AdminAuthenticationPrincipal;
+import atdd.auth.domain.AuthenticationPrincipal;
 import atdd.member.application.MemberService;
 import atdd.member.domain.Member;
 import atdd.member.dto.AdminMemberRequest;
@@ -64,19 +65,18 @@ public class MemberController {
     }
 
     @GetMapping("/members/me")
-    public ResponseEntity<MemberResponse> findMemberOfMine(MemberRequest memberRequest) {
-        //MemberResponse member = memberService.findMember(memberRequest.getEmail());
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<MemberResponse> findMemberOfMine(@AuthenticationPrincipal Member loginMember) {
+        return ResponseEntity.ok().body(MemberResponse.of(loginMember));
     }
 
     @PutMapping("/members/me")
-    public ResponseEntity<MemberResponse> updateMemberOfMine(Member loginMember, @RequestBody MemberRequest param) {
+    public ResponseEntity updateMemberOfMine(@AuthenticationPrincipal Member loginMember, @RequestBody MemberRequest param) {
         memberService.updateMember(loginMember.getId(), param);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/members/me")
-    public ResponseEntity<MemberResponse> deleteMemberOfMine(Member loginMember) {
+    public ResponseEntity deleteMemberOfMine(@AuthenticationPrincipal Member loginMember) {
         memberService.deleteMember(loginMember.getId());
         return ResponseEntity.noContent().build();
     }

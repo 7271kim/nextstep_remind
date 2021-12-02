@@ -16,6 +16,7 @@ import atdd.auth.dto.TokenResponse;
 import atdd.member.dto.AdminMemberRequest;
 import atdd.member.dto.AdminMemberResponse;
 import atdd.member.dto.MemberRequest;
+import atdd.member.dto.MemberResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -144,19 +145,66 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @DisplayName("내 정보 확인")
     @Test
     void getMy() {
+        //given
+        TokenResponse token = AuthAcceptanceTest.계정_로그인("7271kim@naver.com", "1234");
 
+        //when
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .auth().oauth2(token.getAccessToken())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/members/me")
+            .then().log().all()
+            .extract();
+
+        //then
+        MemberResponse me = response.jsonPath().getObject(".", MemberResponse.class);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(me.getEmail()).isEqualTo("7271kim@naver.com");
     }
 
     @DisplayName("내 정보 업데이트")
     @Test
     void updateMy() {
+        //given
+        TokenResponse token = AuthAcceptanceTest.계정_로그인("7271kim@naver.com", "1234");
+
+        //when
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .auth().oauth2(token.getAccessToken())
+            .body(new MemberRequest("aaaaaa", "123", 20))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().put("/members/me")
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        TokenResponse update = AuthAcceptanceTest.계정_로그인("aaaaaa", "123");
+        assertThat(update.getAccessToken()).isNotBlank();
 
     }
 
     @DisplayName("내 정보 삭제")
     @Test
     void deleteMy() {
+        //given
+        TokenResponse token = AuthAcceptanceTest.계정_로그인("7271kim@naver.com", "1234");
 
+        //when
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .auth().oauth2(token.getAccessToken())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().delete("/members/me")
+            .then().log().all()
+            .extract();
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+        ExtractableResponse<Response> newResponse = AuthAcceptanceTest.계정_로그인_응답("7271kim@naver.com", "1234");
+        assertThat(newResponse.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     public static ExtractableResponse<Response> 회원_생성_요청(String email, String password, Integer age) {
