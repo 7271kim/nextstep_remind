@@ -1,6 +1,5 @@
 package atdd.path.ui;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,7 @@ public class PathController {
         this.pathService = pathService;
     }
 
-    @GetMapping(value = "/paths", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/paths")
     public ResponseEntity<PathResponse> showStations(@NoneAuthenticationPrincipal Member loginMember, @RequestParam Long source, @RequestParam Long target) {
         return ResponseEntity.ok().body(pathService.findMinPath(loginMember, source, target));
     }

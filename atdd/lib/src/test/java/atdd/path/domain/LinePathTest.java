@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import atdd.common.InputException;
 import atdd.line.domain.Line;
+import atdd.member.domain.Member;
 import atdd.section.domain.Section;
+import atdd.section.domain.Sections;
 import atdd.station.domain.Station;
 
 public class LinePathTest {
@@ -79,15 +81,32 @@ public class LinePathTest {
         강변역 = new Station(14L, "강변역");
         개성역 = new Station(14L, "개성역");
 
-        신분당선 = new Line(1L, "신분당선", "bg-red-600", 강남역, 양재역, 10, 0);
-        이호선 = new Line(2L, "이호선", "bg-red-600", 교대역, 강남역, 10, 0);
-        삼호선 = new Line(3L, "삼호선", "bg-red-600", 교대역, 남부터미널역, 3, 0);
-        사호선 = new Line(4L, "사호선", "bg-red-600", 양재역, 오리역, 7, 0);
-        자바선 = new Line(5L, "자바선", "bg-red-600", 선릉역, 오리역, 1, 0);
-        호남선 = new Line(6L, "호남선", "bg-red-600", 잠실역, 분당역, 10, 0);
-        서해선 = new Line(7L, "서해선", "bg-red-600", 시흥대야역, 은계역, 3, 0);
-        오호선 = new Line(8L, "오호선", "bg-red-600", 잠실역, 잠실나루역, 10, 900);
-        육호선 = new Line(9L, "육호선", "bg-red-600", 잠실나루역, 강변역, 10, 1000);
+        신분당선 = new Line(1L, "신분당선", "bg-red-600", new Sections(), 0);
+        신분당선.addSection(new Section(1l, 신분당선, 강남역, 양재역, 10));
+
+        이호선 = new Line(2L, "신분당선", "bg-red-600", new Sections(), 0);
+        이호선.addSection(new Section(2l, 이호선, 교대역, 강남역, 10));
+
+        삼호선 = new Line(3L, "삼호선", "bg-red-600", new Sections(), 0);
+        삼호선.addSection(new Section(3l, 삼호선, 교대역, 남부터미널역, 3));
+
+        사호선 = new Line(4L, "사호선", "bg-red-600", new Sections(), 0);
+        사호선.addSection(new Section(4l, 사호선, 양재역, 오리역, 7));
+
+        자바선 = new Line(5L, "자바선", "bg-red-600", new Sections(), 0);
+        자바선.addSection(new Section(5l, 자바선, 선릉역, 오리역, 1));
+
+        호남선 = new Line(6L, "호남선", "bg-red-600", new Sections(), 0);
+        호남선.addSection(new Section(6l, 호남선, 잠실역, 분당역, 10));
+
+        서해선 = new Line(7L, "서해선", "bg-red-600", new Sections(), 0);
+        서해선.addSection(new Section(7l, 서해선, 시흥대야역, 은계역, 3));
+
+        오호선 = new Line(8L, "오호선", "bg-red-600", new Sections(), 900);
+        오호선.addSection(new Section(8l, 오호선, 잠실역, 잠실나루역, 10));
+
+        육호선 = new Line(9L, "육호선", "bg-red-600", new Sections(), 1000);
+        육호선.addSection(new Section(9l, 육호선, 잠실나루역, 강변역, 10));
 
         이호선.addSection(new Section(이호선, 강남역, 선릉역, 10));
         이호선.addSection(new Section(이호선, 선릉역, 잠실역, 5));
@@ -142,6 +161,20 @@ public class LinePathTest {
         assertThrows(InputException.class, () -> {
             linePathSearch.searchPath(사당역, 서울대역);
         });
+    }
+
+    @Test
+    @DisplayName("요금을 확인한다.")
+    void checkFare() {
+        LinePath 선릉_강변 = linePathSearch.searchPath(선릉역, 강변역); //25km
+        LinePath 개성_강남 = linePathSearch.searchPath(개성역, 강남역); //60km
+        assertThat(선릉_강변.getFare(new Member("", "", 19))).isEqualTo(2550);// 1250 + 1000 + 300
+        assertThat(선릉_강변.getFare(new Member("", "", 18))).isEqualTo(1760);// ( 900 + 1000 + 300 ) *0.8
+        assertThat(선릉_강변.getFare(new Member("", "", 12))).isEqualTo(1100);// ( 900 + 1000 + 300 ) *0.5
+
+        assertThat(개성_강남.getFare(new Member("", "", 19))).isEqualTo(2150);// 1250 + 800 + 100
+        assertThat(개성_강남.getFare(new Member("", "", 18))).isEqualTo(1440);// ( 900 + 800 + 100 ) *0.8
+        assertThat(개성_강남.getFare(new Member("", "", 12))).isEqualTo(900);// ( 900 + 800 + 100 ) *0.5
     }
 
 }

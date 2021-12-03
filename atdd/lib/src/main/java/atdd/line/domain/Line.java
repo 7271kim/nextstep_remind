@@ -53,11 +53,6 @@ public class Line extends BaseEntity {
         this.extraFee = extraFee;
     }
 
-    public Line(Long id, String color, String name, Station upStation, Station downSation, int distance, int extraFee) {
-        this(color, name, extraFee);
-        sections.add(new Section(this, upStation, upStation, distance));
-    }
-
     public Long getId() {
         return id;
     }

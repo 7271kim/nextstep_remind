@@ -4,21 +4,41 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jgrapht.GraphPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
 
+import atdd.common.InputException;
 import atdd.member.domain.Member;
+import atdd.path.constant.DiscountRange;
+import atdd.path.constant.DistanceFee;
 import atdd.station.domain.Station;
 
 public class LinePath {
     private List<Station> stations;
-    private List<DefaultWeightedEdge> edges;
+    private List<SectionEdge> edges;
+    private int minDistance;
+    private int extraFee;
 
-    public LinePath(GraphPath<Station, DefaultWeightedEdge> path) {
+    public LinePath(GraphPath<Station, SectionEdge> path) {
+        validate(path);
         this.stations = path.getVertexList();
         this.edges = path.getEdgeList();
+        this.minDistance = (int)Math.round(path.getWeight());
+        this.extraFee = getExtraFee();
     }
 
-    public static LinePath of(GraphPath<Station, DefaultWeightedEdge> path) {
+    private int getExtraFee() {
+        return edges.stream()
+            .min((one, two) -> Integer.compare(two.getExtraFee(), one.getExtraFee()))
+            .map(SectionEdge::getExtraFee)
+            .orElse(0);
+    }
+
+    private void validate(GraphPath<Station, SectionEdge> path) {
+        if (path == null) {
+            throw new InputException();
+        }
+    }
+
+    public static LinePath of(GraphPath<Station, SectionEdge> path) {
         return new LinePath(path);
     }
 
@@ -27,13 +47,13 @@ public class LinePath {
     }
 
     public int getMinDistance() {
-        // TODO Auto-generated method stub
-        return 0;
+        return minDistance;
     }
 
-    public int getFare(Member loginMember) {
-        // TODO Auto-generated method stub
-        return 0;
+    public double getFare(Member loginMember) {
+        DiscountRange discountRange = DiscountRange.findByMember(loginMember);
+        int distanceFee = DistanceFee.findByDistance(minDistance);
+        return (distanceFee + extraFee - discountRange.getStatndard()) * discountRange.getDiscountRate();
     }
 
 }

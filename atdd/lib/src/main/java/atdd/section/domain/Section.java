@@ -116,6 +116,10 @@ public class Section {
         return Objects.isNull(section) || Objects.isNull(section.getId());
     }
 
+    public int getExtraFee() {
+        return line.getExtraFee();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id);

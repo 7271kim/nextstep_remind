@@ -3,7 +3,6 @@ package atdd.path.domain;
 import java.util.List;
 
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.WeightedMultigraph;
 
 import atdd.common.InputException;
@@ -13,12 +12,12 @@ import io.jsonwebtoken.lang.Collections;
 
 public class LinePathSearch {
 
-    private WeightedMultigraph<Station, DefaultWeightedEdge> graph;
-    private DijkstraShortestPath<Station, DefaultWeightedEdge> dijkstra;
+    private WeightedMultigraph<Station, SectionEdge> graph = new WeightedMultigraph<>(SectionEdge.class);
+    private DijkstraShortestPath<Station, SectionEdge> dijkstra;
 
     public LinePathSearch(List<Section> sections) {
         validate(sections);
-        settingGraph(sections);
+        settingGraphAndMaxFee(sections);
         this.dijkstra = new DijkstraShortestPath<>(graph);
     }
 
@@ -28,13 +27,15 @@ public class LinePathSearch {
         }
     }
 
-    private void settingGraph(List<Section> sections) {
+    private void settingGraphAndMaxFee(List<Section> sections) {
         for (Section section : sections) {
             Station upStation = section.getUpstation();
             Station downStation = section.getDownStatoin();
+            SectionEdge edge = SectionEdge.of(section);
             graph.addVertex(upStation);
             graph.addVertex(downStation);
-            graph.setEdgeWeight(graph.addEdge(upStation, downStation), section.getDistance());
+            graph.addEdge(upStation, downStation, edge);
+            graph.setEdgeWeight(edge, section.getDistance());
         }
     }
 

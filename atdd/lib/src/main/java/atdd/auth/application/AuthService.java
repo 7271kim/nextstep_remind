@@ -46,7 +46,7 @@ public class AuthService {
 
     public Member findMemberByTokenOrElseGuest(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
-            throw new AuthorizationException();
+            return Member.EMTPY;
         }
 
         String email = jwtTokenProvider.getPayload(credentials);

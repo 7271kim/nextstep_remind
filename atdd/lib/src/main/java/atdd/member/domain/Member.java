@@ -81,4 +81,8 @@ public class Member extends BaseEntity {
         this.email = email;
         this.age = age;
     }
+
+    public boolean isNull() {
+        return email == null;
+    }
 }

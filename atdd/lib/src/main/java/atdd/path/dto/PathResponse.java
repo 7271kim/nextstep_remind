@@ -9,17 +9,17 @@ import atdd.station.dto.StationResponse;
 public class PathResponse {
     private List<StationResponse> stations;
     private int distance;
-    private int fare;
+    private double fare;
 
     public PathResponse() {}
 
-    private PathResponse(List<StationResponse> stations, int distance, int fare) {
+    private PathResponse(List<StationResponse> stations, int distance, double fare) {
         this.stations = stations;
         this.distance = distance;
         this.fare = fare;
     }
 
-    public static PathResponse of(List<Station> stations, int distance, int fare) {
+    public static PathResponse of(List<Station> stations, int distance, double fare) {
         return new PathResponse(toReseponse(stations), distance, fare);
     }
 
@@ -37,7 +37,7 @@ public class PathResponse {
         return distance;
     }
 
-    public int getFare() {
+    public double getFare() {
         return fare;
     }
 

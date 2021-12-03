@@ -7,6 +7,8 @@ import static atdd.section.SectionAcceptantTest.*;
 import static atdd.station.StationAcceptantTest.*;
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,15 +93,15 @@ public class PathAcceptantTest extends AcceptanceTest {
         잠실나루역 = 지하철역_생성요청("잠실나루역");
         강변역 = 지하철역_생성요청("강변역");
 
-        신분당선 = 지하철_노선_생성요청("신분당선", "bg-red-600", 강남역.getId(), 양재역.getId(), 10, 0);
-        이호선 = 지하철_노선_생성요청("이호선", "bg-red-600", 교대역.getId(), 강남역.getId(), 10, 0);
-        삼호선 = 지하철_노선_생성요청("삼호선", "bg-red-600", 교대역.getId(), 양재역.getId(), 5, 0);
-        사호선 = 지하철_노선_생성요청("사호선", "bg-red-600", 양재역.getId(), 오리역.getId(), 7, 0);
-        오호선 = 지하철_노선_생성요청("오호선", "bg-red-600", 잠실역.getId(), 잠실나루역.getId(), 10, 900);
-        육호선 = 지하철_노선_생성요청("육호선", "bg-red-600", 잠실나루역.getId(), 강변역.getId(), 10, 1000);
-        자바선 = 지하철_노선_생성요청("자바선", "bg-red-600", 선릉역.getId(), 오리역.getId(), 1, 0);
-        호남선 = 지하철_노선_생성요청("호남선", "bg-red-600", 잠실역.getId(), 분당역.getId(), 10, 0);
-        서해선 = 지하철_노선_생성요청("서해선", "bg-red-600", 시흥대야역.getId(), 은계역.getId(), 3, 0);
+        신분당선 = 지하철_노선_생성요청("bg-red-600", "신분당선", 강남역.getId(), 양재역.getId(), 10, 0);
+        이호선 = 지하철_노선_생성요청("bg-red-600", "이호선", 교대역.getId(), 강남역.getId(), 10, 0);
+        삼호선 = 지하철_노선_생성요청("bg-red-600", "삼호선", 교대역.getId(), 양재역.getId(), 5, 0);
+        사호선 = 지하철_노선_생성요청("bg-red-600", "사호선", 양재역.getId(), 오리역.getId(), 7, 0);
+        오호선 = 지하철_노선_생성요청("bg-red-600", "오호선", 잠실역.getId(), 잠실나루역.getId(), 10, 900);
+        육호선 = 지하철_노선_생성요청("bg-red-600", "육호선", 잠실나루역.getId(), 강변역.getId(), 10, 1000);
+        자바선 = 지하철_노선_생성요청("bg-red-600", "자바선", 선릉역.getId(), 오리역.getId(), 1, 0);
+        호남선 = 지하철_노선_생성요청("bg-red-600", "호남선", 잠실역.getId(), 분당역.getId(), 10, 0);
+        서해선 = 지하철_노선_생성요청("bg-red-600", "서해선", 시흥대야역.getId(), 은계역.getId(), 3, 0);
 
         지하철_구간_생성요청(강남역.getId(), 선릉역.getId(), 10, 이호선.getId());
         지하철_구간_생성요청(선릉역.getId(), 잠실역.getId(), 5, 이호선.getId());
@@ -120,7 +122,7 @@ public class PathAcceptantTest extends AcceptanceTest {
 
         //then
         assertThat(양재_잠실.getDistance()).isEqualTo(13);
-        assertThat(양재_잠실.getStations()).containsExactly(양재역, 오리역, 선릉역, 잠실역);
+        assertThat(양재_잠실.getStations().stream().map(StationResponse::getName).collect(Collectors.toList())).containsExactly("양재역", "오리역", "선릉역", "잠실역");
         assertThat(양재_잠실.getFare()).isEqualTo(1250);
 
         //10km초과∼50km까지(5km마다 100원)
@@ -171,8 +173,8 @@ public class PathAcceptantTest extends AcceptanceTest {
         PathResponse 어린이_60km = 최단거리_경로_요청(개성역.getId(), 강남역.getId(), 어린이);
 
         //then then 50km초과 시 (8km마다 100원) 증가한다. 1250(10km) + 800(40km) + 100(10km)
-        assertThat(청소년_60km.getFare()).isEqualTo(1720);
-        assertThat(어린이_60km.getFare()).isEqualTo(1075);
+        assertThat(청소년_60km.getFare()).isEqualTo(1440); // 1250-350 = ( 900 + 800 + 100 ) *0.8
+        assertThat(어린이_60km.getFare()).isEqualTo(900); // 1250-350 = ( 900 + 800 + 100 ) *0.5
 
     }
 
