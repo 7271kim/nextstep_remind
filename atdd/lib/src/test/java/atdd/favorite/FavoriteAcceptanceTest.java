@@ -47,7 +47,10 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
         SectionAcceptantTest.지하철_구간_생성요청(교대역.getId(), 역삼역.getId(), 10, 이호선.getId());
 
         MemberAcceptanceTest.회원_생성_요청("7271kim@naver.com", "1234", 20);
+        MemberAcceptanceTest.회원_생성_요청("7271kim@naver2.com", "1234", 20);
         token = AuthAcceptanceTest.계정_로그인("7271kim@naver.com", "1234");
+        TokenResponse token2 = AuthAcceptanceTest.계정_로그인("7271kim@naver2.com", "1234");
+        즐겨찾기_생성_요청_응답(강남역.getId(), 역삼역.getId(), token2);
 
         String location = 즐겨찾기_생성_요청_응답(강남역.getId(), 역삼역.getId(), token).header("Location");
         id = Long.parseLong(location.substring(location.lastIndexOf("/") + 1));
@@ -55,7 +58,7 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("즐겨찾기 생성 확인")
     @Test
-    void createMember() {
+    void createFavorite() {
         //when
         ExtractableResponse<Response> response = 즐겨찾기_생성_요청_응답(강남역.getId(), 교대역.getId(), token);
 
@@ -64,9 +67,19 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
         assertThat(response.header("Location")).isNotBlank();
     }
 
+    @DisplayName("없는 역으로 즐겨찾기 생성 시 에러 출력")
+    @Test
+    void createErrorFavorite() {
+        //when
+        ExtractableResponse<Response> response = 즐겨찾기_생성_요청_응답(5l, 6l, token);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("즐겨찾기 목록 조회")
     @Test
-    void getMembers() {
+    void getFavorites() {
         //when
         List<FavoriteResponse> response = 즐겨찾기_목록_조회(token);
 
@@ -79,13 +92,23 @@ public class FavoriteAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("즐겨찾기 삭제")
     @Test
-    void deleteMember() {
+    void deleteFavorite() {
         //when
         ExtractableResponse<Response> response = 즐겨찾기_삭제_응답(token, id);
 
         //then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
         assertThat(즐겨찾기_목록_조회(token).size()).isZero();
+    }
+
+    @DisplayName("잘못된 즐겨 찾기 삭제")
+    @Test
+    void deleteErrorFavorite() {
+        //when
+        ExtractableResponse<Response> response = 즐겨찾기_삭제_응답(token, 5l);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static ExtractableResponse<Response> 즐겨찾기_생성_요청_응답(Long source, Long target, TokenResponse token) {

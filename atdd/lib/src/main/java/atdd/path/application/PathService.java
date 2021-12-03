@@ -29,6 +29,7 @@ public class PathService {
         this.sectionRepository = sectionRepository;
     }
 
+    @Transactional(readOnly = true)
     public PathResponse findMinPath(Member loginMember, Long source, Long target) {
         Station startStation = stationRepository.findById(source).orElseThrow(InputException::new);
         Station targetStation = stationRepository.findById(target).orElseThrow(InputException::new);

@@ -2,6 +2,7 @@ package atdd.auth.application;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import atdd.auth.dto.TokenRequest;
 import atdd.auth.dto.TokenResponse;
@@ -35,6 +36,7 @@ public class AuthService {
         return new TokenResponse(token);
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByToken(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
             return Member.EMTPY;
@@ -44,6 +46,7 @@ public class AuthService {
         return memberRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByTokenOrElseGuest(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
             return Member.EMTPY;
@@ -53,6 +56,7 @@ public class AuthService {
         return memberRepository.findByEmail(email).orElseThrow(UserException::new);
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByTokenAndAdmin(String credentials) {
         if (!jwtTokenProvider.validateToken(credentials)) {
             throw new AuthorizationException();

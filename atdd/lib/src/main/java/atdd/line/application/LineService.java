@@ -61,14 +61,19 @@ public class LineService {
         }
     }
 
-    /*public List<LineResponse> allLines() {
+    /*
+    @Transactional(readOnly = true)
+    public List<LineResponse> allLines() {
         return lineRepository.findAllJoinFetch().stream().map(LineResponse::from).collect(Collectors.toList());
-    }*/
+    }
+    */
 
+    @Transactional(readOnly = true)
     public List<LineResponse> allLines() {
         return lineRepository.findAll().stream().map(LineResponse::exceptStationFrom).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public LineResponse getLine(Long lineId) {
         return LineResponse.from(lineRepository.findById(lineId).orElseThrow(InputException::new));
     }

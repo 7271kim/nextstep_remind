@@ -34,6 +34,7 @@ public class MemberService {
         return MemberResponse.of(member);
     }
 
+    @Transactional(readOnly = true)
     public AdminMemberResponse findMember(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
         return AdminMemberResponse.of(member);
@@ -55,6 +56,7 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    @Transactional(readOnly = true)
     public List<AdminMemberResponse> findAll() {
         return memberRepository.findAll().stream()
             .map(AdminMemberResponse::of).collect(Collectors.toList());
