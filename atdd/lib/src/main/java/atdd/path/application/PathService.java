@@ -2,6 +2,7 @@ package atdd.path.application;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "path", key = "#source+'_'+#target")
     public PathResponse findMinPath(Member loginMember, Long source, Long target) {
         Station startStation = stationRepository.findById(source).orElseThrow(InputException::new);
         Station targetStation = stationRepository.findById(target).orElseThrow(InputException::new);

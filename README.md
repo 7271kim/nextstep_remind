@@ -11,3 +11,9 @@
 #### 즐겨찾기 추가
 #### 요금조회 추가
 #### Admin 기능 추가
+### + [마지막주차 - 화면 응답 개선하기](https://github.com/7271kim/nextstep_remind/tree/main/atdd)
+#### 인덱스 추가 
+#### Redis 캐쉬 적용
+#### 페이징 적용
+#### DB Replication (Master-Slave) 설정
+

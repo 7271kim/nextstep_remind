@@ -3,6 +3,9 @@ package atdd.member.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,22 +38,26 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "member", key = "#id")
     public AdminMemberResponse findMember(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
         return AdminMemberResponse.of(member);
     }
 
+    @CachePut(value = "member", key = "#id")
     public void updateMember(Long id, AdminMemberRequest param) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
         member.update(param.toMember());
     }
 
+    @CachePut(value = "member", key = "#id")
     public void updateMember(Long id, MemberRequest param) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
         param.setPassword(passwordEncoder.encode(param.getPassword()));
         member.update(param.toMember());
     }
 
+    @CacheEvict(value = "member", key = "#id")
     public void deleteMember(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(InputException::new);
         memberRepository.delete(member);
@@ -64,7 +71,8 @@ public class MemberService {
 
     public MemberResponse createAdminMember(MemberRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        Member member = memberRepository.save(new Member("rootAdmin", request.getPassword(), request.getAge(), UserType.ADMIN.getCode(), ActiveType.ACTIVE.getCode()));
+        Member member = memberRepository
+            .save(new Member("rootAdmin", request.getPassword(), request.getAge(), UserType.ADMIN.getCode(), ActiveType.ACTIVE.getCode()));
         return MemberResponse.of(member);
     }
 }
