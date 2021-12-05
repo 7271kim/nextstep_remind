@@ -3,6 +3,7 @@ package atdd.favorite.application;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,8 +38,8 @@ public class FavoriteService {
     }
 
     @Transactional(readOnly = true)
-    public List<FavoriteResponse> findAll(Long loginId) {
-        return favoriteRepository.findByMemberId(loginId).stream()
+    public List<FavoriteResponse> findAll(Long loginId, Pageable pageable) {
+        return favoriteRepository.findByMemberIdWithPagination(loginId, pageable).stream()
             .map(FavoriteResponse::of)
             .collect(Collectors.toList());
     }

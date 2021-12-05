@@ -3,6 +3,9 @@ package atdd.favorite.ui;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +35,9 @@ public class FavoriteController {
     }
 
     @GetMapping("/favorites")
-    public ResponseEntity<List<FavoriteResponse>> getFavorites(@AuthenticationPrincipal Member loginMember) {
-        return ResponseEntity.ok().body(favoriteService.findAll(loginMember.getId()));
+    public ResponseEntity<List<FavoriteResponse>> getFavorites(@AuthenticationPrincipal Member loginMember,
+            @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok().body(favoriteService.findAll(loginMember.getId(), pageable));
     }
 
     @DeleteMapping("/favorites/{favoriteId}")
