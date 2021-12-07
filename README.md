@@ -16,4 +16,4 @@
 #### Redis 캐쉬 적용
 #### 페이징 적용
 #### DB Replication (Master-Slave) 설정
-
+## 3. [AWS 과제 리마인드](https://github.com/7271kim/nextstep_remind/tree/main/aws)
