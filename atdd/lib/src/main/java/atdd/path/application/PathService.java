@@ -31,7 +31,7 @@ public class PathService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "path", key = "#source+'_'+#target")
+    @Cacheable(value = "path", key = "#source+'_'+#target+'_'+#loginMember.id")
     public PathResponse findMinPath(Member loginMember, Long source, Long target) {
         Station startStation = stationRepository.findById(source).orElseThrow(InputException::new);
         Station targetStation = stationRepository.findById(target).orElseThrow(InputException::new);

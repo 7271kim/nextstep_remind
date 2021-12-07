@@ -174,6 +174,7 @@ public class LinePathTest {
 
         assertThat(개성_강남.getFare(new Member("", "", 19))).isEqualTo(2150);// 1250 + 800 + 100
         assertThat(개성_강남.getFare(new Member("", "", 18))).isEqualTo(1440);// ( 900 + 800 + 100 ) *0.8
+        assertThat(개성_강남.getFare(new Member("", "", 13))).isEqualTo(1440);// ( 900 + 800 + 100 ) *0.8
         assertThat(개성_강남.getFare(new Member("", "", 12))).isEqualTo(900);// ( 900 + 800 + 100 ) *0.5
     }
 
