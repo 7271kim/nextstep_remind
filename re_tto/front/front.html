@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotto</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="./js/StringUtils.js" type="module"></script>
+
+</head>
+
+<body>
+
+    <script src="./js/main.js" type="module"></script>
+</body>
+<h1>로또 뽑기</h1>
+<p>나왔으면 하는 숫자( ex 1 2 3 22 33 ) <input type="text" name="requiredNumber" id="requiredNumber"></p>
+<p>나오지 않았으면 하는 숫자( ex 1 2 3 22 33 ) <input type="text" name="avoidNumber" id="avoidNumber"></p>
+<p> 로또 뽑기 횟수 <input type="number" name="count" id="count"></p>
+<p> 몇개의 번호르 받을 것인지 (기본 6개) <input type="number" name="range" id="range" value="6"></p>
+<p> 당첨 번호( ex 1 2 3 22 33 ) <input type="text" name="winningNumber" id="winningNumber"></p>
+<div><input type="button" id="getLotto" value="로또 뽑기"> <input type="button" id="checkStatic" value="통계 확인하기"> </div>
+
+</html>
